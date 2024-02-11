@@ -2,6 +2,8 @@ import { type Metadata } from 'next';
 import { type PropsWithChildren } from 'react';
 import { Exo, Oswald, Red_Hat_Mono } from 'next/font/google';
 
+import SiteHeader from '@/components/SiteHeader/SiteHeader';
+
 import './globals.css';
 
 const sans = Exo({ subsets: ['latin'], variable: '--font-sans' });
@@ -32,11 +34,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="en" className="min-h-full">
       <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} font-sans antialiased selection:bg-gray-300 selection:text-gray-900`}
+        className={`${sans.variable} ${display.variable} ${mono.variable} selection:bg-surface-300 bg-surface-900 text-textClr-200 flex h-full flex-col overscroll-y-none font-sans antialiased selection:text-gray-900`}
       >
-        {children}
+        <SiteHeader />
+        <main className="flex-grow">{children}</main>
       </body>
     </html>
   );

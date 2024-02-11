@@ -7,7 +7,7 @@
     @apply focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current;
   }
 
-  :where(button, nav) {
+  :where(button, nav, a) {
     @apply select-none;
   }
 

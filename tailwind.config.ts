@@ -36,6 +36,9 @@ const config: Config = {
         display: ['var(--font-display)', ...defaultTheme.fontFamily.sans],
         mono: ['var(--font-mono)', ...defaultTheme.fontFamily.mono],
       },
+      spacing: {
+        pageWidth: '1088px',
+      },
     },
   },
   plugins: [

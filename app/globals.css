@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current;
+  }
+
+  :where(button, nav) {
+    @apply select-none;
+  }
+
+  :where(button, button *) {
+    @apply leading-none;
+  }
+}
+
+@layer components {
+  /* My version of TW's prose...use for the markdown blog posts */
+  .myProse {
+    @apply text-textClr-200 max-w-[min(720px,100%)] text-lg font-medium;
+    > :first-child {
+      @apply !mt-0;
+    }
+    > :last-child {
+      @apply !mb-0;
+    }
+    p {
+      @apply mx-5 tracking-wide;
+    }
+    strong {
+      @apply text-secondary-500 font-bold italic;
+    }
+    em {
+      @apply font-bold;
+    }
+    a {
+      @apply text-primary-300 font-semibold no-underline;
+    }
+    hr {
+      @apply border-surface-700 mx-12 border-t-2;
+    }
+    h1 {
+      @apply mb-4 mt-0 text-4xl;
+    }
+    h2 {
+      @apply mb-4 mt-10 text-2xl;
+    }
+    h3 {
+      @apply mb-2 mt-8 text-xl;
+    }
+    h4 {
+      @apply mb-2 mt-6 text-base;
+    }
+    h1,
+    h2,
+    h3,
+    h4 {
+      /* TODO: is the scroll mt working and the right size */
+      @apply text-textClr-50 scroll-mt-20 font-bold tracking-wide;
+      strong {
+        @apply font-extrabold;
+      }
+      a {
+        font-weight: inherit;
+        color: inherit;
+      }
+    }
+    blockquote {
+      /* TODO: why is there a py of 1px ?? */
+      @apply text-textClr-200 bg-surface-700 relative mx-10 rounded-xl border-2 border-l-[6px] px-[1em] py-px text-[0.95em] font-medium italic sm:-mx-4;
+      &.info {
+        @apply border-primary-300 before:content-["😉"];
+      }
+      &.attention {
+        @apply border-secondary-500 before:content-["🤓"];
+      }
+      &.warning {
+        @apply border-warning-500 before:content-["🤨"];
+        strong {
+          @apply text-warning-500;
+        }
+      }
+      /* TODO: is this working ?? */
+      &:is(.info, .attention, .warning)::before {
+        @apply non-italic bg-surface-900 absolute -left-3.5 -top-3.5 inline-block rounded-full p-1.5 text-3xl/none;
+      }
+    }
+    img,
+    video,
+    figure {
+      @apply my-8;
+    }
+    figure > * {
+      @apply my-0;
+    }
+    figcaption {
+      @apply text-textClr-400 mt-3 text-sm;
+    }
+    code,
+    time {
+      @apply text-primary-200 rounded-[0.25em] bg-white/10 px-[0.4em] py-[0.12em] text-[0.95em] tracking-wide;
+    }
+    /* TODO: could this be within `pre` ?? */
+    div[data-rehype-pretty-code-fragment] {
+      @apply relative mb-8 mt-10;
+      div[data-rehype-pretty-code-title] {
+        @apply text-textClr-200 bg-surface-800 border-b-primary-300 absolute -top-7 left-5 flex h-7 items-center rounded-t-lg border-b px-4 pt-1 text-xs tracking-widest;
+      }
+    }
+    /* TODO: -mx seems strange here */
+    pre {
+      @apply bg-surface-800 relative -mx-4 min-w-full whitespace-pre rounded-lg before:content-[attr(data-language)] xs:-mx-6 sm:-mx-4;
+    }
+    pre::before {
+      @apply text-textClr-200 bg-surface-800 absolute -top-7 right-9 flex h-7 items-center rounded-t-lg px-4 pt-1 text-xs uppercase tracking-widest;
+    }
+    pre > code {
+      /* TODO: is this working ?? */
+      counter-reset: 'line';
+      @apply grid overflow-x-auto bg-transparent px-0 py-6 text-sm font-medium leading-[1.8] tracking-wide;
+      .word {
+        @apply rounded-[0.25em] bg-white/10 px-[0.25em] py-[0.18em];
+      }
+      .line {
+        @apply border-l-4 border-l-transparent px-[1.8em] before:inline-block;
+        &.line-highlighted {
+          @apply border-l-primary-300 bg-white/10;
+        }
+      }
+      &[data-line-numbers] > .line::before {
+        counter-increment: 'line';
+        content: counter('line');
+        @apply text-textClr-400 mr-6 w-4 text-right;
+      }
+      &[data-line-numbers-max-digits='2'] > .line::before {
+        @apply w-6;
+      }
+    }
+    ol,
+    ul {
+      @apply my-[1.25em] pl-[1.6em];
+    }
+    ol {
+      list-style-type: decimal;
+      & > li::marker {
+        @apply text-textClr-400 font-normal;
+      }
+    }
+    ul {
+      list-style-type: disc;
+      & > li::marker {
+        @apply text-textClr-600;
+      }
+    }
+    li {
+      @apply my-[0.5em];
+      > :is(ul, ol) {
+        @apply !m-0;
+      }
+    }
+    :where(ol, ul) > li {
+      @apply pl-[0.375em];
+      p {
+        @apply my-[0.75em];
+      }
+      & > *:first-child {
+        @apply mt-[1.25em];
+      }
+      & > *:last-child {
+        @apply mb-[1.25em];
+      }
+    }
+    :where(ol, ul) :where(ol, ul) {
+      @apply my-[0.75em];
+    }
+    table {
+      @apply w-full table-auto text-left text-[0.875em] leading-[1.7];
+    }
+    thead {
+      @apply border-b-surface-600 border-b-[1px];
+      th {
+        @apply text-primary-300 px-[0.6em] pb-[0.6em] align-bottom font-semibold;
+      }
+      th:first-child {
+        @apply pl-0;
+      }
+      th:last-child {
+        @apply pr-0;
+      }
+    }
+    tbody {
+      tr {
+        @apply border-b-surface-700 border-b-[1px];
+        &:last-child {
+          @apply border-b-0;
+        }
+      }
+      td {
+        @apply align-baseline;
+      }
+    }
+    tfoot {
+      @apply border-t-surface-600 border-t-[1px];
+      td {
+        @apply align-top;
+      }
+    }
+    :where(tbody, tfoot) {
+      td {
+        @apply p-[0.6em];
+        &:first-child {
+          @apply pl-0;
+        }
+        &:last-child {
+          @apply pr-0;
+        }
+      }
+    }
+  }
+}

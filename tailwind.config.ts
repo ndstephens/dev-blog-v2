@@ -37,7 +37,9 @@ const config: Config = {
         mono: ['var(--font-mono)', ...defaultTheme.fontFamily.mono],
       },
       spacing: {
-        pageWidth: '1088px',
+        pageWidth: '68rem', // 1088px
+        headerHeightDesktop: '4rem', // 64px
+        headerHeightMobile: '3.25rem', // 48px
       },
       keyframes: {
         overlayShow: {

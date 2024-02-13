@@ -17,9 +17,13 @@
 }
 
 @layer components {
+  .page-padding {
+    @apply px-4 xs:px-6 sm:px-8;
+  }
+
   /* My version of TW's prose...use for the markdown blog posts */
   .myProse {
-    @apply text-textClr-200 max-w-[min(720px,100%)] text-lg font-medium;
+    @apply max-w-[min(720px,100%)] text-lg font-medium text-textClr-200;
     > :first-child {
       @apply !mt-0;
     }
@@ -30,16 +34,16 @@
       @apply mx-5 tracking-wide;
     }
     strong {
-      @apply text-secondary-500 font-bold italic;
+      @apply font-bold italic text-secondary-500;
     }
     em {
       @apply font-bold;
     }
     a {
-      @apply text-primary-300 font-semibold no-underline;
+      @apply font-semibold text-primary-300 no-underline;
     }
     hr {
-      @apply border-surface-700 mx-12 border-t-2;
+      @apply mx-12 border-t-2 border-surface-700;
     }
     h1 {
       @apply mb-4 mt-0 text-4xl;
@@ -58,7 +62,7 @@
     h3,
     h4 {
       /* TODO: is the scroll mt working and the right size */
-      @apply text-textClr-50 scroll-mt-20 font-bold tracking-wide;
+      @apply scroll-mt-20 font-bold tracking-wide text-textClr-50;
       strong {
         @apply font-extrabold;
       }
@@ -69,7 +73,7 @@
     }
     blockquote {
       /* TODO: why is there a py of 1px ?? */
-      @apply text-textClr-200 bg-surface-700 relative mx-10 rounded-xl border-2 border-l-[6px] px-[1em] py-px text-[0.95em] font-medium italic sm:-mx-4;
+      @apply relative mx-10 rounded-xl border-2 border-l-[6px] bg-surface-700 px-[1em] py-px text-[0.95em] font-medium italic text-textClr-200 sm:-mx-4;
       &.info {
         @apply border-primary-300 before:content-["😉"];
       }
@@ -84,7 +88,7 @@
       }
       /* TODO: is this working ?? */
       &:is(.info, .attention, .warning)::before {
-        @apply non-italic bg-surface-900 absolute -left-3.5 -top-3.5 inline-block rounded-full p-1.5 text-3xl/none;
+        @apply non-italic absolute -left-3.5 -top-3.5 inline-block rounded-full bg-surface-900 p-1.5 text-3xl/none;
       }
     }
     img,
@@ -96,25 +100,25 @@
       @apply my-0;
     }
     figcaption {
-      @apply text-textClr-400 mt-3 text-sm;
+      @apply mt-3 text-sm text-textClr-400;
     }
     code,
     time {
-      @apply text-primary-200 rounded-[0.25em] bg-white/10 px-[0.4em] py-[0.12em] text-[0.95em] tracking-wide;
+      @apply rounded-[0.25em] bg-white/10 px-[0.4em] py-[0.12em] text-[0.95em] tracking-wide text-primary-200;
     }
     /* TODO: could this be within `pre` ?? */
     div[data-rehype-pretty-code-fragment] {
       @apply relative mb-8 mt-10;
       div[data-rehype-pretty-code-title] {
-        @apply text-textClr-200 bg-surface-800 border-b-primary-300 absolute -top-7 left-5 flex h-7 items-center rounded-t-lg border-b px-4 pt-1 text-xs tracking-widest;
+        @apply absolute -top-7 left-5 flex h-7 items-center rounded-t-lg border-b border-b-primary-300 bg-surface-800 px-4 pt-1 text-xs tracking-widest text-textClr-200;
       }
     }
     /* TODO: -mx seems strange here */
     pre {
-      @apply bg-surface-800 relative -mx-4 min-w-full whitespace-pre rounded-lg before:content-[attr(data-language)] xs:-mx-6 sm:-mx-4;
+      @apply relative -mx-4 min-w-full whitespace-pre rounded-lg bg-surface-800 before:content-[attr(data-language)] xs:-mx-6 sm:-mx-4;
     }
     pre::before {
-      @apply text-textClr-200 bg-surface-800 absolute -top-7 right-9 flex h-7 items-center rounded-t-lg px-4 pt-1 text-xs uppercase tracking-widest;
+      @apply absolute -top-7 right-9 flex h-7 items-center rounded-t-lg bg-surface-800 px-4 pt-1 text-xs uppercase tracking-widest text-textClr-200;
     }
     pre > code {
       /* TODO: is this working ?? */
@@ -132,7 +136,7 @@
       &[data-line-numbers] > .line::before {
         counter-increment: 'line';
         content: counter('line');
-        @apply text-textClr-400 mr-6 w-4 text-right;
+        @apply mr-6 w-4 text-right text-textClr-400;
       }
       &[data-line-numbers-max-digits='2'] > .line::before {
         @apply w-6;
@@ -145,7 +149,7 @@
     ol {
       list-style-type: decimal;
       & > li::marker {
-        @apply text-textClr-400 font-normal;
+        @apply font-normal text-textClr-400;
       }
     }
     ul {
@@ -179,9 +183,9 @@
       @apply w-full table-auto text-left text-[0.875em] leading-[1.7];
     }
     thead {
-      @apply border-b-surface-600 border-b-[1px];
+      @apply border-b-[1px] border-b-surface-600;
       th {
-        @apply text-primary-300 px-[0.6em] pb-[0.6em] align-bottom font-semibold;
+        @apply px-[0.6em] pb-[0.6em] align-bottom font-semibold text-primary-300;
       }
       th:first-child {
         @apply pl-0;
@@ -192,7 +196,7 @@
     }
     tbody {
       tr {
-        @apply border-b-surface-700 border-b-[1px];
+        @apply border-b-[1px] border-b-surface-700;
         &:last-child {
           @apply border-b-0;
         }
@@ -202,7 +206,7 @@
       }
     }
     tfoot {
-      @apply border-t-surface-600 border-t-[1px];
+      @apply border-t-[1px] border-t-surface-600;
       td {
         @apply align-top;
       }

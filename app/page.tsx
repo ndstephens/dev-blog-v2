@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Dev Blog',
+  title: 'Nate Stephens - Web Development Blog',
 };
 
 export default function HomePage() {

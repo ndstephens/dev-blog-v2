@@ -13,7 +13,7 @@ export default function SiteFooter() {
             </span>
           </small>
         </p>
-
+        {/* SOCIAL LINKS */}
         <address>
           <ul className="flex gap-1">
             <SocialLink href="https://github.com/ndstephens" title="Github">

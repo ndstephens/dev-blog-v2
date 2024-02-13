@@ -3,6 +3,7 @@ import { type PropsWithChildren } from 'react';
 import { Exo, Oswald, Red_Hat_Mono } from 'next/font/google';
 
 import SiteHeader from '@/components/SiteHeader/SiteHeader';
+import SiteFooter from '@/components/SiteFooter/SiteFooter';
 
 import './globals.css';
 
@@ -33,14 +34,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className="min-h-full">
+    <html lang="en" className="h-full">
       <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} overscroll-y-none bg-surface-900 font-sans text-textClr-200 antialiased selection:bg-surface-300 selection:text-gray-900`}
+        className={`${sans.variable} ${display.variable} ${mono.variable} flex min-h-full flex-col overscroll-y-none bg-surface-900 font-sans text-textClr-200 antialiased selection:bg-primary-300 selection:text-gray-900`}
       >
-        <div className="isolate flex h-full flex-col">
-          <SiteHeader />
-          <main className="flex-grow">{children}</main>
-        </div>
+        <SiteHeader />
+        <main className="flex-grow">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

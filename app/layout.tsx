@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     title: 'Nate Stephens',
     description:
       'A technical blog about web development focusing on React, Next.js, TypeScript, CSS, and more.',
-    images: [],
   },
   twitter: {
     site: '@fivefloral',
@@ -36,10 +35,12 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className="min-h-full">
       <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} selection:bg-surface-300 bg-surface-900 text-textClr-200 flex h-full flex-col overscroll-y-none font-sans antialiased selection:text-gray-900`}
+        className={`${sans.variable} ${display.variable} ${mono.variable} overscroll-y-none bg-surface-900 font-sans text-textClr-200 antialiased selection:bg-surface-300 selection:text-gray-900`}
       >
-        <SiteHeader />
-        <main className="flex-grow">{children}</main>
+        <div className="isolate flex h-full flex-col">
+          <SiteHeader />
+          <main className="flex-grow">{children}</main>
+        </div>
       </body>
     </html>
   );

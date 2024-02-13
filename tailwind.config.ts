@@ -39,6 +39,23 @@ const config: Config = {
       spacing: {
         pageWidth: '1088px',
       },
+      keyframes: {
+        overlayShow: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        contentShow: {
+          from: {
+            opacity: '0',
+            transform: 'scale(0.96)',
+          },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        overlayShow: 'overlayShow 150ms ease',
+        contentShow: 'contentShow 200ms ease',
+      },
     },
   },
   plugins: [

@@ -15,10 +15,7 @@ const config: Config = {
   },
   theme: {
     colors: {
-      transparent,
-      current,
-      white,
-      black,
+      ...colors,
       gray: colors.slate,
       textClr: colors.slate,
       surface: colors.slate,

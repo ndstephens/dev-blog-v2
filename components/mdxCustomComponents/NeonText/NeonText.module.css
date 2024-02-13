@@ -1,0 +1,25 @@
+.neon {
+  animation: neonize 1s ease-in-out infinite alternate;
+}
+
+/* prettier-ignore */
+@keyframes neonize {
+  from {
+    text-shadow:
+    0 0 4px #fff,
+    0 0 10px #fff,
+    0 0 30px #ff319b,
+    0 0 50px #ff319b,
+    0 0 70px #ff319b,
+    0 0 90px #ff319b;
+  }
+  to {
+    text-shadow:
+    0 0 2px #fff,
+    0 0 5px #fff,
+    0 0 15px #ff319b,
+    0 0 25px #ff319b,
+    0 0 35px #ff319b,
+    0 0 45px #ff319b;
+  }
+}

@@ -20,9 +20,12 @@
     "next-mdx-remote": "^4.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "rehype-accessible-emojis": "^0.3.2",
     "rehype-autolink-headings": "^7.1.0",
+    "rehype-pretty-code": "^0.13.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
+    "shiki": "^1.1.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

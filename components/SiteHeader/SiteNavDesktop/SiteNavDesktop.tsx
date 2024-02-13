@@ -6,27 +6,31 @@ import { usePathname } from 'next/navigation';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { CaretDownIcon } from '@radix-ui/react-icons';
 import { clsx } from 'clsx';
+
 import { blogRoutes } from '@/lib/config/routes';
 
 export default function SiteNavDesktop() {
   const pathname = usePathname();
 
   return (
-    <NavigationMenu.Root className="relative h-full [&>div]:h-full">
-      <NavigationMenu.List className="divide-surface-800 text-textClr-400 flex h-full list-none items-center divide-x-2 font-semibold">
+    <NavigationMenu.Root
+      className="relative hidden h-full md:block [&>div]:h-full"
+      delayDuration={100}
+    >
+      <NavigationMenu.List className="flex h-full list-none items-center divide-x-2 divide-surface-800 font-semibold text-textClr-400">
         {/* BLOG */}
         <NavigationMenu.Item className="flex h-full items-center pr-4">
           <NavigationMenu.Trigger
             className={clsx(
-              'hocusv:text-textClr-50 group flex items-center gap-x-1 rounded px-3 py-1 uppercase tracking-wider transition-colors',
-              pathname.startsWith('/blog') && 'text-textClr-50',
+              'group flex items-center gap-x-1 rounded px-3 py-1 uppercase tracking-wider transition-colors data-[state=open]:text-textClr-100 hocusv:text-textClr-100',
+              pathname.startsWith('/blog') && 'text-textClr-100',
             )}
           >
             Blog
             <CaretDownIcon
               width={20}
               height={20}
-              className="text-current transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+              className="text-current transition-transform ease-in group-data-[state=open]:-rotate-180"
               aria-hidden
             />
           </NavigationMenu.Trigger>
@@ -66,15 +70,16 @@ type LinkItemProps = {
 
 function LinkItem({ href, title, className }: LinkItemProps) {
   const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
     <Link href={href} passHref legacyBehavior>
       <NavigationMenu.Link
-        active={pathname === href}
+        active={isActive}
         className={clsx(
-          'hocusv:text-textClr-50 block rounded px-3 py-1 uppercase tracking-wider transition-colors',
+          'block rounded px-3 py-1 uppercase tracking-wider transition-colors hocusv:text-textClr-100',
           className,
-          pathname === href && 'text-textClr-50',
+          isActive && 'text-textClr-100',
         )}
       >
         {title}

@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 
-export const meta: Metadata = {
+export const metaConfig: Metadata = {
   title: {
     template: '%s | Nate Stephens',
     default: 'Nate Stephens',

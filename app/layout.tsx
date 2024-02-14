@@ -6,7 +6,7 @@ import { SkipLink } from '@/components/SkipToContent/SkipToContent';
 import SiteHeader from '@/components/SiteHeader/SiteHeader';
 import SiteFooter from '@/components/SiteFooter/SiteFooter';
 
-import { meta } from '@/lib/config/metadata';
+import { metaConfig } from '@/lib/config/metadata';
 
 import './globals.css';
 
@@ -14,7 +14,7 @@ const sans = Exo({ subsets: ['latin'], variable: '--font-sans' });
 const display = Oswald({ subsets: ['latin'], variable: '--font-display' });
 const mono = Red_Hat_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
-export const metadata = meta;
+export const metadata = metaConfig;
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       >
         <SkipLink />
         <SiteHeader />
-        <main className="flex-grow">{children}</main>
+        <main className="flex flex-grow flex-col">{children}</main>
         <SiteFooter />
       </body>
     </html>

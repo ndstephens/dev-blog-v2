@@ -236,7 +236,6 @@ export const getProjectFromSlug = async (slug: string) => {
     path.endsWith(`${slug}.mdx`),
   );
   if (!projectPath) {
-    // throw new Error('No post found for this slug');
     return notFound();
   }
   const project = await getProjectFromPath(projectPath);
@@ -252,9 +251,9 @@ const getProjectFromPath = async (projectPath: string) => {
     source,
     options: {
       parseFrontmatter: true,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm],
-      },
+      // mdxOptions: {
+      //   remarkPlugins: [remarkGfm],
+      // },
     },
   });
 
@@ -312,7 +311,7 @@ export const getAllSlugs = async (postType: PostType) => {
 };
 
 //* =============================================
-//*      BLOG TEST / VALIDATION FUNCTIONS       =
+//*               POST FRONTMATTER              =
 //*==============================================
 // VERIFY STRUCTURE AND DATA-TYPES OF POST (gray-matter response)
 // const RawPostSchema = z.object({
@@ -356,7 +355,7 @@ const parsePostFrontmatter = (rawFrontmatter: unknown, slug: string) => {
 };
 
 //* =============================================
-//*      PROJECT TEST / VALIDATION FUNCTIONS       =
+//*             PROJECT FRONTMATTER             =
 //*==============================================
 // VERIFY STRUCTURE AND DATA-TYPES OF PROJECT (gray-matter response)
 // const RawProjectSchema = z.object({

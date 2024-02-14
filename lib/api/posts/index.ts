@@ -246,7 +246,6 @@ export const getProjectFromSlug = async (slug: string) => {
 const getProjectFromPath = async (projectPath: string) => {
   const slug = getSlugFromPath(projectPath);
   const source = await fs.readFile(projectPath, 'utf-8');
-  // const projectData = matter(source);
   const { content, frontmatter } = await compileMDX({
     source,
     options: {
@@ -258,7 +257,6 @@ const getProjectFromPath = async (projectPath: string) => {
   });
 
   try {
-    // return parseProject(projectData, slug);
     return {
       content,
       meta: parseProjectFrontmatter(frontmatter, slug),
@@ -357,31 +355,6 @@ const parsePostFrontmatter = (rawFrontmatter: unknown, slug: string) => {
 //* =============================================
 //*             PROJECT FRONTMATTER             =
 //*==============================================
-// VERIFY STRUCTURE AND DATA-TYPES OF PROJECT (gray-matter response)
-// const RawProjectSchema = z.object({
-//   content: z.string().trim().min(1),
-//   data: z.object({
-//     title: z.string().trim().min(1),
-//     description: z.string().trim().min(1),
-//     created: z.date().transform((date) => date.toISOString()),
-//     updated: z.date().transform((date) => date.toISOString()),
-//     imgUrl: z.string().trim().min(1),
-//     imgAlt: z.string().trim().min(1),
-//     gradient: z.string().trim().min(1),
-//   }),
-// });
-
-// const parseProject = (projectData: unknown, slug: string): Project => {
-//   const { content, data } = RawProjectSchema.parse(projectData);
-//   return {
-//     content,
-//     meta: {
-//       slug,
-//       ...data,
-//     },
-//   };
-// };
-
 const RawProjectFrontmatter = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().min(1),

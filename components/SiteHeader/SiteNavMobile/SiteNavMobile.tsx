@@ -29,8 +29,8 @@ export default function SiteNavMobile() {
         </Dialog.Trigger>
 
         <Dialog.Portal>
-          <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed inset-0 bg-black/20 backdrop-blur-sm" />
-          <Dialog.Content className="data-[state=open]:animate-contentShow fixed right-5 top-5 max-h-[85vh] w-[calc(100vw-40px)] max-w-[280px] rounded-2xl bg-surface-800 p-5 text-lg font-semibold text-textClr-400">
+          <Dialog.Overlay className="fixed inset-0 z-10 bg-black/20 backdrop-blur-sm data-[state=open]:animate-overlayShow" />
+          <Dialog.Content className="fixed right-5 top-5 z-10 max-h-[85vh] w-[calc(100vw-40px)] max-w-[280px] rounded-2xl bg-surface-800 p-5 text-lg font-semibold text-textClr-400 data-[state=open]:animate-contentShow">
             <ul className="flex flex-col space-y-2 py-2">
               <li
                 className={clsx(

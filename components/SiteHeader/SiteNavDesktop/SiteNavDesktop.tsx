@@ -34,7 +34,7 @@ export default function SiteNavDesktop() {
               aria-hidden
             />
           </NavigationMenu.Trigger>
-          <NavigationMenu.Content className="absolute -left-3 top-full  rounded-b-md bg-transparent backdrop-blur-md">
+          <NavigationMenu.Content className="absolute -left-3 top-full rounded-b-md bg-surface-900/80 backdrop-blur-sm">
             <ul className="space-y-2 px-3 py-2">
               {blogRoutes.map(({ title, href }) => (
                 <li key={href}>

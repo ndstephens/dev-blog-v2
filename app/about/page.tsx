@@ -34,7 +34,7 @@ export default async function AboutPage() {
 
   return (
     <div className="gradient-page-body h-full">
-      <div className="page-padding mx-auto flex h-full max-w-pageWidth justify-center py-[16vh]">
+      <div className="page-padding mx-auto flex h-full max-w-pageWidth justify-center py-[10vh] sm:py-[16vh]">
         <SkipAnchor />
         <h1 className="sr-only">About Me</h1>
         <article className="my-prose">{content}</article>

@@ -4,7 +4,8 @@ import SiteNavDesktop from '@/components/SiteHeader/SiteNavDesktop/SiteNavDeskto
 
 export default function SiteHeader() {
   return (
-    <header className="h-headerHeightMobile xs:h-headerHeightDesktop sticky top-0 select-none bg-surface-900/80 backdrop-blur-sm backdrop-saturate-150">
+    <header className="sticky top-0 z-10 h-headerHeightMobile select-none bg-surface-900/85 xs:h-headerHeightDesktop">
+      <div className="absolute inset-0 -z-10 backdrop-blur-sm" />
       <div className="page-padding mx-auto flex h-full max-w-pageWidth items-center justify-between">
         <Logo />
         <SiteNavMobile />

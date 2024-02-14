@@ -1,6 +1,8 @@
-type BlogRoute = {
+import { PostCategory } from '@/lib/api/posts/types';
+
+export type BlogRoute = {
   title: string;
-  category: string;
+  category: PostCategory | 'all';
   href: string;
   brief: string;
   descLong: string;

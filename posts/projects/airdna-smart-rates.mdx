@@ -1,0 +1,28 @@
+---
+title: Smart Rates - AirDNA
+description: Optimize pricing and maximize revenue of your Airbnb rental
+created: 2023-03-25
+updated: 2023-03-25
+imgUrl: /images/projects/airdna-smart-rates.webp
+imgAlt: Screenshot of the Smart Rates Page on the AirDNA MarketMinder app.
+gradient: gradient-smart-rates
+---
+
+## The Project
+
+A lot of factors go into determining the optimal price for an Airbnb rental on any given day. There's the overall market, your local comparable properties, nearby events and festivals, and even climate conditions. The Smart-Rates tool provides a calendar-based UI to display daily recommended price adjustments based on a client's price settings. Customers could also connect with third-party services to automate their Airbnb pricing based on their Smart-Rates pricing data.
+
+## Challenges
+
+This feature required a lot of data to be displayed in a small space. For this we needed to consider efficiency not just in the UI design, but also in its rendering so as to not bog down the user's device. We used `react-window` to efficiently render only the parts of the calendar that were in view or just off screen. We also had to create the calendar UI from scratch since we couldn't find a library that met our needs. We also needed to create a flexible architecture that could support multiple comparison UIs (calendar vs. charts, market average vs. our Smart-Rates algorithm).
+
+## Personal Growth
+
+A fun part of this project was the need to focus on optimizing the code for rendering performance. I learned a lot about how to do this using React features (such as `memo`) and third-party libraries such as `react-window`. I also made use of the React DevTools to identify performance bottlenecks. I gained additional experience with creating a flexible architecture that could support multiple UIs. That included normalizing the data into an object structure (vs the usual array) which enabled faster querying of specific days by both UI implementations.
+
+## Technical Details
+
+- React (memo, useMemo, useCallback)
+- TypeScript
+- React-Query (caching)
+- react-window

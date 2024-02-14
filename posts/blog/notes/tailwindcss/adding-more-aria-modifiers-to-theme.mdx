@@ -1,0 +1,69 @@
+---
+title: Adding More ARIA Modifiers to the Theme
+description: You can customize which `aria-*` modifiers are available by editing your theme.  ARIA state modifiers can also target parent and sibling elements.
+created: 2022-11-10
+updated: 2022-11-10
+category: notes
+topics:
+  - Tailwind
+---
+
+You can use the `aria-*` modifier to conditionally style things based on ARIA attributes.
+
+For example, to apply the `bg-sky-700` class when the `aria-checked` attribute is set to `true`, use the `aria-checked:bg-sky-700` class:
+
+```html /aria-checked/
+<div aria-checked="true" class="bg-gray-600 aria-checked:bg-sky-700">
+  <!-- ... -->
+</div>
+```
+
+You can customize which `aria-*` modifiers are available by editing `theme.aria` or `theme.extend.aria` in your `tailwind.config.js` file:
+
+```js title="tailwind.config.js"
+module.exports = {
+  theme: {
+    extend: {
+      aria: {
+        asc: 'sort="ascending"',
+        desc: 'sort="descending"',
+      },
+    },
+  },
+};
+```
+
+```html /aria-sort="ascending"/ /aria-asc/
+<ul aria-sort="ascending" class="aria-asc:bg-sky-700 bg-gray-600">
+  <!-- ... -->
+</ul>
+```
+
+ARIA state modifiers can also target _parent_ and _sibling_ elements using the `group-aria-*` and `peer-aria-*` modifiers:
+
+```html /group/
+<table>
+  <thead>
+    <tr>
+      <th aria-sort="ascending" class="group">
+        Invoice
+        <svg
+          class="group-aria-[sort=ascending]:rotate-0 group-aria-[sort=descending]:rotate-180"
+        >
+          <!-- ... -->
+        </svg>
+      </th>
+      <!-- ... -->
+    </tr>
+  </thead>
+  <!-- ... -->
+</table>
+```
+
+<br />
+
+<TailwindDocs />
+
+---
+
+<LastUpdated updated={updated} />

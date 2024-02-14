@@ -1,0 +1,98 @@
+---
+title: Extract and Exclude Utilities
+description: The `Extract` and `Exclude` utility types in TypeScript are used to obtain sub-parts of a type. The `Extract` type is used to get a sub-part of a type that is assignable to some other type, while the `Exclude` type is used to obtain a sub-part of a type that is not assignable to some other type. Both types are implemented using conditional types. They are useful for refining and narrowing down the properties of complex types in TypeScript.
+created: 2022-08-25
+updated: 2022-08-25
+category: notes
+topics:
+  - TypeScript
+---
+
+These utility types, included with TypeScript, are used to obtain a sub-part of a type either through specifying what you're looking for or what you're _not_ looking for.
+
+Behind the scenes they are implemented using **conditional types**.
+
+## Extract
+
+What you're looking for.
+
+Useful for obtaining some sub-part of a type that is assignable to some other type.
+
+`type Extract<T, U> = T extends U ? T : never`
+
+```ts
+type FavoriteColors =
+  | 'dark sienna'
+  | 'yellow ochre'
+  | 'sap green'
+  | 'titanium white'
+  | 'phthalo green'
+  | 'prussian blue'
+  | 'cadium yellow'
+  | [number, number, number]
+  | { red: number; green: number; blue: number };
+
+type StringColors = Extract<FavoriteColors, string>;
+// type StringColors = "dark sienna" | "yellow ochre" | "sap green" | "titanium white" | "phthalo green" | "prussian blue" | "cadium yellow"
+
+type ObjectColors = Extract<FavoriteColors, { red: number }>;
+// type ObjectColors = {
+//   red: number;
+//   green: number;
+//   blue: number;
+// }
+
+type TupleColors = Extract<FavoriteColors, [number, number, number]>;
+// type TupleColors = [number, number, number]
+```
+
+For `type StringColors` you could say:
+
+"We're `Extract`ing the subset of `FavoriteColors` that is assignable to `string`."
+
+<blockquote className="attention">
+  **NOTE:** this is similar to the example of using `keyof` with the `&`
+  intersection operator in the [Type Queries](ts-type-queries) notes.
+</blockquote>
+
+## Exclude
+
+What you're **NOT** looking for.
+
+Useful for obtaining some sub-part of a type that is **NOT** assignable to some other type.
+
+`type Exclude<T, U> = T extends U ? never : T`
+
+```ts
+type FavoriteColors =
+  | 'dark sienna'
+  | 'yellow ochre'
+  | 'sap green'
+  | 'titanium white'
+  | 'phthalo green'
+  | 'prussian blue'
+  | 'cadium yellow'
+  | [number, number, number]
+  | { red: number; green: number; blue: number };
+
+type NonStringColors = Exclude<FavoriteColors, string>;
+// type NonStringColors =
+//   | [number, number, number]
+//   | {
+//       red: number;
+//       green: number;
+//       blue: number;
+//     }
+```
+
+For `type NonStringColors` you could say:
+
+"We're `Exclude`ing the subset of `FavoriteColors` that is assignable to `string`."
+
+<br />
+
+<IntermediateTSCourse />
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,52 @@
+---
+title: Index Signatures
+description: When accessing properties from an object typed with an index signature, we need to be careful as the index signature allows us to assume any property and provides it with type completions, even if the constant phones has been assigned to an empty object. A safer implementation would be to first check if the property is a defined property on the object by using an if statement or the optional chaining operator.
+created: 2022-08-21
+updated: 2022-08-21
+category: notes
+topics:
+  - TypeScript
+---
+
+We need to be careful when blindly accessing properties from an object typed with an **index signature**.
+
+```ts {9}
+const phones: {
+  [k: string]: {
+    country: string;
+    area: string;
+    number: string;
+  };
+} = {};
+
+phones.fax.number; // <- does NOT give an error
+```
+
+Even though the constant `phones` has been assigned to an empty object, the **index signature** allows us to assume any property (such as `fax`) and provides it with type completions.
+
+A safer implementation would be:
+
+```ts {8}
+const phones: {
+  [k: string]:
+    | {
+        country: string;
+        area: string;
+        number: string;
+      }
+    | undefined;
+} = {};
+
+phones.fax.number; // <- ERROR
+phones.fax?.number; // <- OK
+```
+
+Here we need to first check if `fax` is a defined property on `phones` (can use an `if` statement, etc).
+
+<br />
+
+<TSFundamentalsCourse />
+
+---
+
+<LastUpdated updated={updated} />

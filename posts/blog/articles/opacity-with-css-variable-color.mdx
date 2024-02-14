@@ -1,0 +1,156 @@
+---
+title: Opacity with CSS Variable Colors in Tailwind
+description: There's a more flexible way to customize your color palette in Tailwind CSS beyond the advice given in their documentation.  You can already define custom colors using CSS variables in Tailwind while preserving the opacity modifier syntax, however this method also allows you to easily use the built-in Tailwind colors.
+created: 2023-02-06
+updated: 2023-02-06
+category: articles
+topics:
+  - Tailwind
+---
+
+There's a more flexible way to customize your color palette in Tailwind beyond the advice given in their documentation.
+
+The [Tailwind Docs](https://tailwindcss.com/docs/customizing-colors#using-css-variables) do a great job of explaining their approach in how you can define your colors as CSS variables and still maintain the [opacity modifier syntax](https://tailwindcss.com/docs/text-color#changing-the-opacity).
+
+## Tailwind's Example
+
+```css {7-8} title="main.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 255 115 179; // rgb
+    --color-secondary: 198deg 93% 60%; // hsl
+    /* ... */
+  }
+}
+```
+
+```js title="tailwind.config.js"
+module.exports = {
+  theme: {
+    colors: {
+      // Using modern `rgb`
+      primary: 'rgb(var(--color-primary) / <alpha-value>)',
+      // Using modern `hsl`
+      secondary: 'hsl(var(--color-secondary) / <alpha-value>)',
+    },
+  },
+};
+```
+
+There are, however, a few things I don't like about this approach.
+
+- For one, your editor probably can't/won't give you color info when hover over the color values such as `255 115 179`.
+- You can't provide your color info in a `hex` format.
+- Because you can't use `hex` you also therefore can't use the built-in Tailwind colors (since they're applied as `hex` values).
+
+## A New Hope
+
+I wanted access to Tailwind's built-in colors when defining my custom color palette using CSS variables. This meant being able to use `hex` color values.
+
+To accomplish this I used the [color-convert](https://github.com/Qix-/color-convert) library (from the same FOSS maintainer that brought us **chalk**). This allowed me to convert `hex` values over to `rgb` or `hsl` pretty easily.
+
+From there I made a couple utility functions to help with the color conversions and the necessary string wrangling (ie `rgb(var(--color-primary) / <alpha-value>)`).
+
+```js title="tailwind.config.js" {5,25} /withOpacity/ /convertColorModel/
+const defaultColors = require('tailwindcss/colors');
+const plugin = require('tailwindcss/plugin');
+const convert = require('color-convert');
+
+// UTILITY FUNCTIONS
+const withOpacity = (cssVariable, colorSpace = 'hsl') =>
+  colorSpace === 'rgb'
+    ? `rgb(${cssVariable} / <alpha-value>)`
+    : `hsl(${cssVariable} / <alpha-value>)`;
+
+const convertColorModel = (hexColor, colorSpace = 'hsl') =>
+  colorSpace === 'rgb' ? hexToRGB(hexColor) : hexToHSL(hexColor);
+
+const hexToRGB = (hexColor) => {
+  return convert.hex.rgb(hexColor).join(' ');
+};
+
+const hexToHSL = (hexColor) => {
+  return convert.hex
+    .hsl(hexColor)
+    .map((val, i) => `${val}${i === 0 ? 'deg' : '%'}`)
+    .join(' ');
+};
+
+// UPDATE THE TAILWIND THEME
+module.exports = {
+  darkMode: 'class',
+  theme: {
+    colors: {
+      primary: withOpacity('var(--color-primary)'),
+      secondary: withOpacity('var(--color-secondary)'),
+    },
+  },
+  plugins: [
+    plugin(function ({ addBase }) {
+      addBase({
+        // =======       LIGHT-MODE COLORS       =======
+        html: {
+          '--color-primary': convertColorModel(defaultColors.amber[600]),
+          '--color-secondary': convertColorModel(defaultColors.fuchsia[700]),
+        },
+        // =======       DARK-MODE COLORS       =======
+        'html.dark': {
+          '--color-primary': convertColorModel(defaultColors.amber[300]),
+          '--color-secondary': convertColorModel(defaultColors.cyan[400]),
+        },
+      });
+    }),
+  ],
+};
+```
+
+Unlike the Tailwind example, here I'm creating my CSS variables in the `tailwind.config.js` file...not the `main.css` file.
+
+This is done using the built-in plugin `addBase`. Here you write your CSS in a **CSS-in-JS** syntax (basically JavaScript object syntax).
+
+Using `addBase` has a similar result in that the variables are added to the CSS `base` layer...which was accessed using `@layer base {...}` in the `main.css` file.
+
+Keeping everything in the `theme.config.js` file provides me access to the `convertColorModel` utility function I created. It's purpose is to transform the **hex** color value into three string values that represent either the **rgb** or **hsl** values.
+
+By adding those CSS variables to the Tailwind `theme` they are now accessible through your code editor's intellisense. Well, that's true at least in VSCode with the [Tailwind extension](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss).
+
+## Light and Dark Theme
+
+Also worth noting...in `tailwind.config.js` I enabled `darkMode: class`.
+
+My theming setup works by adding the `dark` class to the `html` element when a user switches to the dark theme on my site.
+
+This way I can use the same CSS variable name for my light and dark theme by giving them different values in my `config`. I'll repeat that section of the code again here:
+
+```js title="tailwind.config.js" {2} /.dark/ /--color-primary/ /--color-secondary/
+module.exports = {
+  darkMode: 'class',
+  //...
+  plugins: [
+    plugin(function ({ addBase }) {
+      addBase({
+        // =======       LIGHT-MODE COLORS       =======
+        html: {
+          '--color-primary': convertColorModel(defaultColors.amber[600]),
+          '--color-secondary': convertColorModel(defaultColors.fuchsia[700]),
+        },
+        // =======       DARK-MODE COLORS       =======
+        'html.dark': {
+          '--color-primary': convertColorModel(defaultColors.amber[300]),
+          '--color-secondary': convertColorModel(defaultColors.cyan[400]),
+        },
+      });
+    }),
+  ],
+};
+```
+
+Hopefully you find this useful...or better yet, improve upon it. Thanks for reading.
+
+---
+
+<LastUpdated updated={updated} />

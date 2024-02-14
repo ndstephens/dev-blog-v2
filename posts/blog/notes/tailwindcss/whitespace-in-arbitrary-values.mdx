@@ -1,0 +1,51 @@
+---
+title: Whitespace in Arbitrary Values
+description: When an arbitrary value needs to contain a space, use an underscore instead and Tailwind will automatically convert it to a space at build-time.
+created: 2023-01-22
+updated: 2023-01-22
+category: notes
+topics:
+  - Tailwind
+---
+
+When an arbitrary value needs to contain a space, use an **underscore** (`_`) instead and Tailwind will automatically convert it to a space at build-time:
+
+```html /1fr_500px_2fr/
+<div class="grid grid-cols-[1fr_500px_2fr]">
+  <!-- ... -->
+</div>
+```
+
+In situations where underscores are common but spaces are invalid, Tailwind will _preserve the underscore_ instead of converting it to a space, for example in URLs:
+
+```html /what_a_rush/
+<div class="bg-[url('/what_a_rush.png')]">
+  <!-- ... -->
+</div>
+```
+
+In the rare case that you actually _need to use an underscore_ but it's ambiguous because a space is valid as well, _escape the underscore with a backslash_ (`\`) and Tailwind won't convert it to a space:
+
+{/* prettier-ignore */}
+```html /hello\\_world/
+<div class="before:content-['hello\_world']">
+  <!-- ... -->
+</div>
+```
+
+If you're using something like **JSX** where the backslash is stripped from the rendered HTML, use [String.raw()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/raw) so the backslash isn't treated as a JavaScript escape character:
+
+{/* prettier-ignore */}
+```jsx
+<div className={String.raw`before:content-['hello\_world']`}>
+  {/* ... */}
+</div>
+```
+
+<br />
+
+<TailwindDocs />
+
+---
+
+<LastUpdated updated={updated} />

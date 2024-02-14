@@ -1,0 +1,120 @@
+---
+title: Objects Are Not Really Nested
+description: Objects and arrays in JavaScript do not truly contain other objects or arrays. Instead, objects and arrays contain references to other objects or arrays. When nested objects or arrays are updated, the original object or array is updated as well. To avoid unintended mutations, you should create copies of nested objects or arrays and update the copy instead of the original.
+created: 2022-10-27
+updated: 2022-10-27
+category: notes
+topics:
+  - JavaScript
+---
+
+# Objects Are Not Really Nested
+
+## Objects within Objects
+
+Here's an example of a object that appears "nested":
+
+```js
+const obj = {
+  name: 'Niki de Saint Phalle',
+  artwork: {
+    title: 'Blue Nana',
+    city: 'Hamburg',
+    image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+  },
+};
+```
+
+However, “nesting” is an inaccurate way to think about how objects behave. When the code executes, there is no such thing as a “nested” object. You are really looking at two different objects:
+
+```js
+const obj1 = {
+  title: 'Blue Nana',
+  city: 'Hamburg',
+  image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+};
+
+const obj2 = {
+  name: 'Niki de Saint Phalle',
+  artwork: obj1,
+};
+```
+
+The `obj1` object is not “inside” `obj2`. For example, `obj3` could “point” at `obj1` too:
+
+```js
+const obj1 = {
+  title: 'Blue Nana',
+  city: 'Hamburg',
+  image: 'https://i.imgur.com/Sd1AgUOm.jpg',
+};
+
+const obj2 = {
+  name: 'Niki de Saint Phalle',
+  artwork: obj1,
+};
+
+const obj3 = {
+  name: 'Copycat',
+  artwork: obj1,
+};
+```
+
+If you were to mutate `obj3.artwork.city`, it would affect both `obj2.artwork.city` and `obj1.city`. This is because `obj3.artwork`, `obj2.artwork`, and `obj1` are the same object. This is difficult to see when you think of objects as “nested”. Instead, they are separate objects “pointing” at each other with properties.
+
+## Objects within Arrays
+
+Objects are not _really_ located “inside” arrays. They might appear to be “inside” in code, but each object in an array is a separate value, to which the array “points”.
+
+When updating nested state, you need to create copies from the point where you want to update, and all the way up to the top level.
+
+Even if you copy an array, you can’t mutate existing items inside of it directly. This is because copying is shallow — the new array will contain the same items as the original one. So if you modify an object inside the copied array, you are mutating the existing state.
+
+```js
+const list = [
+  {
+    version: 1,
+    seen: false,
+  },
+  {
+    version: 2,
+    seen: false,
+  },
+];
+
+const nextList = [...list];
+nextList[0].seen = true; // Problem: mutates list[0]
+```
+
+Although `nextList` and `list` are two different arrays, `nextList[0]` and `list[0]` point to the same object. So by changing `nextList[0].seen`, you are also changing `list[0].seen`. This is a state mutation, which you should avoid! You can solve this issue in a similar way to updating nested JavaScript objects — by copying individual items you want to change instead of mutating them.
+
+So instead of:
+
+```js
+const myNextList = [...myList];
+const artwork = myNextList.find((a) => a.id === artworkId);
+artwork.seen = nextSeen; // Problem: mutates an existing item
+setMyList(myNextList);
+```
+
+Do:
+
+```js
+setMyList(myList.map(artwork => {
+  if (artwork.id === artworkId) {
+    // Create a *new* object with changes
+    return { ...artwork, seen: nextSeen };
+  } else {
+    // No changes
+    return artwork;
+  }
+});
+```
+
+<br />
+
+<ReactDocs />
+
+---
+
+<LastUpdated updated={updated} />

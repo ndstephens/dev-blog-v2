@@ -1,0 +1,60 @@
+---
+title: Sorting Strings
+description: A code snippet on how to best sort strings in JavaScript.
+created: 2023-01-01
+updated: 2023-01-01
+category: snippets
+topics:
+  - JavaScript
+---
+
+```js
+const strArray = ['red', 'white', 'blue'];
+
+const sorted = [...strArray].sort((a, b) => a.localeCompare(b));
+// sorted === [ 'blue', 'red', 'white' ]
+```
+
+## String.prototype.localeCompare()
+
+`<referenceStr>.localeCompare(compareString, locales, options)`
+
+[MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare)
+
+[`locales` documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator#locales)
+
+[`options` documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator#options)
+
+### Returns:
+
+- Negative integer when the `referenceStr` occurs before `compareString`
+- Positive integer when the `referenceStr` occurs after `compareString`
+- `0` if they are equivalent
+
+### Performance
+
+When comparing large numbers of strings, such as in sorting large arrays, it is better to create an `Intl.Collator` object and use the function provided by its `compare()` method.
+
+## Intl.Collator
+
+`String.prototype.localeCompare(compareString, locales, options)` simply calls `Intl.Collator`.
+
+It's equivalent to `new Intl.Collator(locales, options).compare(referenceStr, compareString)`.
+
+```js
+const strArray = ['red', 'white', 'blue'];
+
+const sorted = [...strArray].sort(new Intl.Collator().compare);
+// sorted === [ 'blue', 'red', 'white' ]
+```
+
+<blockquote className="attention">
+  **NOTE:** `Intl.Collator()` can be called with or without `new`. Both create a
+  new `Intl.Collator` instance.
+</blockquote>
+
+[`Intl.Collator() constructor` docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator)
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,32 @@
+---
+title: Delay Function - Promise Based
+description: A code snippet on how to create a delay function using a Promise.
+created: 2022-10-28
+updated: 2023-02-21
+category: snippets
+topics:
+  - JavaScript
+---
+
+Sometimes you need to create an artificial time delay in your code...usually for testing a UI's handling of a delayed API response.
+
+This function will pause execution of code in an async function.
+
+```js
+const wait = (seconds) =>
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+```
+
+In use:
+
+```js {3}
+const foo = async () => {
+  // ...function code
+  await wait(3); // wait for 3 seconds
+  // ...rest of function code
+};
+```
+
+---
+
+<LastUpdated updated={updated} />

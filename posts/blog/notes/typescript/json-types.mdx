@@ -1,0 +1,46 @@
+---
+title: JSON Types
+description: A JSON type represents any allowable JSON value, which must be an object, array, number, string, boolean, or one of the literal names false, true, or null. It cannot be a function, undefined, BigInt, or class. The type is defined using recursive types.
+created: 2022-08-23
+updated: 2022-08-23
+category: notes
+topics:
+  - TypeScript
+---
+
+Defines a type that describes any allowable **JSON** value, which basically means:
+
+- A JSON value MUST be an
+  - object
+  - array
+  - number
+  - string
+  - boolean
+- Or one of the following three literal names:
+  - false
+  - true
+  - null
+- Can **NOT** be any of the following:
+  - function
+  - undefined
+  - BigInt
+  - class
+
+<blockquote className="attention">
+  The trick is to use **Recursive** types
+</blockquote>
+
+```ts
+type JSONPrimitive = string | number | boolean | null;
+type JSONObject = { [key: string]: JSONValue };
+type JSONArray = JSONValue[];
+type JSONValue = JSONPrimitive | JSONObject | JSONArray;
+```
+
+<br />
+
+<TSFundamentalsCourse />
+
+---
+
+<LastUpdated updated={updated} />

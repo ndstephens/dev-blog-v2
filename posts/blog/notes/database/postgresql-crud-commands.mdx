@@ -1,0 +1,287 @@
+---
+title: PostgreSQL CRUD Commands
+description: A brief overview of common SQL commands used for interaction with PostgreSQL. It explains how to insert single and multiple records, perform upsert operations, update and delete records, and select specific columns.
+created: 2023-03-15
+updated: 2023-03-16
+category: notes
+topics:
+  - Database
+---
+
+Here are the primary SQL commands used for interacting with PostgreSQL.
+
+In case you aren't aware, CRUD stands for "Create", "Read", "Update", and "Delete".
+
+## Insert
+
+```sql
+INSERT INTO ingredients (
+ title, image, type
+) VALUES (
+  'red pepper', 'red_pepper.jpg', 'vegetable'
+);
+```
+
+<blockquote className="attention">
+  **NOTE:** values that are strings must be in _single quotes_ (`''`).
+
+Identifiers (table and column names) can be in double quotes, though it's not necessary.
+
+Also, the order of the fields (column names) and their respective values must match.
+
+</blockquote>
+
+Your response should be:
+
+```sql
+INSERT 0 1
+```
+
+The `0` is no longer really in use in PostgreSQL (it's still there for backwards compatibility).
+
+The `1` represents the insert (the number of records affected).
+
+<blockquote className="attention">
+  Whitespace isn't critical in SQL, however punctuation (as noted previously)
+  can be.
+</blockquote>
+
+### Multiple records
+
+You can also insert multiple records in a single command:
+
+```sql {8,11}
+INSERT INTO ingredients (
+  title, image, type
+) VALUES
+  ( 'avocado', 'avocado.jpg', 'fruit' ),
+  ( 'banana', 'banana.jpg', 'fruit' ),
+  ( 'beef', 'beef.jpg', 'meat' ),
+  ( 'black_pepper', 'black_pepper.jpg', 'other' ),
+  ( 'broccoli', 'broccoli.jpg', 'vegetable' ),
+  -- etc etc
+  ( 'watermelon', 'watermelon.jpg', 'fruit' )
+ON CONFLICT DO NOTHING;
+```
+
+Note the `ON CONFLICT` statement. This is telling PostgreSQL that if a row exists already (such as `broccoli`) to just do nothing about it.
+
+## Upsert
+
+With "upserting" the intention is to _insert_ the record if it does not already exist (based on `title` in this case)...but if it does exist then _update_ it.
+
+```sql {5} /won''t/
+INSERT INTO ingredients (
+  title, image, type
+) VALUES
+  ( 'watermelon', 'banana.jpg', 'this won''t be updated' )
+ON CONFLICT (title) DO UPDATE SET image = excluded.image;
+```
+
+In this example we're updating only the `image` value if `'watermelon'` already exists.
+
+<blockquote className="attention">
+  Also note that if you need to escape a single quote (`'`) in a value you use
+  another single quote directly before it.
+</blockquote>
+
+## Update
+
+```sql
+UPDATE ingredients
+SET image = 'strawberry.jpg'
+WHERE title = 'watermelon';
+```
+
+The result would be:
+
+| id  | title      | image          | type  |
+| --- | ---------- | -------------- | ----- |
+| 32  | watermelon | strawberry.jpg | fruit |
+
+Without the `WHERE` clause then _all_ records in the table would have their `image` field updated.
+
+{/* prettier-ignore */}
+<blockquote className="info">
+  The <a href="#where" className="linkHoverStyles">WHERE</a>
+  clause is explained further down below.
+</blockquote>
+
+### Multiple records
+
+```sql
+UPDATE ingredients
+SET type = 'staple'
+WHERE type = 'other'
+RETURNING *;
+```
+
+Here we're updating records with a `type` equal to `'other'` and changing those `type` values to `'staple'`...and returning all results (see next section).
+
+## Returning results
+
+This works for all commands, not just updates.
+
+```sql
+UPDATE ingredients
+SET image = 'watermelon.jpg'
+WHERE title = 'watermelon'
+RETURNING title, image, id, type; -- can also use * to return everything
+```
+
+## Delete
+
+```sql
+DELETE FROM ingredients
+WHERE type = 'staple'
+RETURNING *;
+```
+
+| id  | title        | image            | type   |
+| --- | ------------ | ---------------- | ------ |
+| 6   | black_pepper | black_pepper.jpg | staple |
+| 17  | flour        | flour.jpg        | staple |
+| 18  | ginger       | ginger.jpg       | staple |
+| 27  | salt         | salt.jpg         | staple |
+| 30  | sugar        | sugar.jpg        | staple |
+
+Here we have no `SET` clause.
+
+Anything that matches the `WHERE` clause will be deleted.
+
+`RETURNING`, like in updates, is optional if you want to see what was deleted.
+
+## Select
+
+```sql
+SELECT * FROM ingredients;
+```
+
+The `*` represents all available columns. Usually we do not want to select everything.
+
+```sql
+SELECT id, title FROM ingredients;
+```
+
+Selecting only what you actually need results in smaller payloads and also, more importantly, shows specific intent within your code.
+
+### Limit
+
+```sql
+SELECT id, title, image
+FROM ingredients
+LIMIT 5;
+```
+
+This will limit your return to only five records, the first five it finds.
+
+### Offset
+
+What if you want the next five records?
+
+```sql
+SELECT id, title, image
+FROM ingredients
+LIMIT 5
+OFFSET 5;
+```
+
+This can be inefficient at large scales and without the use of _indexes_.
+
+It also has the problem of if you're paging through data and someone inserts (or deletes) a record in the meantime it could shift your results.
+
+### Add fields
+
+In addition to selecting from the available columns on each record, you can add additional fields in your response.
+
+```sql
+SELECT *, COUNT(*) OVER ()::INTEGER AS total_count
+FROM ingredients
+LIMIT 5;
+```
+
+This will add a field labeled as `total_count` with a value being the total number of records in the table to each record in your response.
+
+| id  | title        | image            | type  | total_count |
+| --- | ------------ | ---------------- | ----- | ----------- |
+| 1   | avocado      | avocado.jpg      | fruit | 30          |
+| 2   | banana       | banana.jpg       | fruit | 30          |
+| 3   | beef         | beef.jpg         | meat  | 30          |
+| 4   | black_pepper | black_pepper.jpg | other | 30          |
+| 5   | blueberry    | blueberry.jpg    | fruit | 30          |
+
+## Filtering
+
+### Where
+
+Sometimes you don't want all of the records but are looking for one or more _specific_ records (based on filters).
+
+In that case you can add a `WHERE` clause to filter your results down to a subset of all of your records.
+
+```sql
+SELECT *
+FROM ingredients
+WHERE type = 'fruit';
+```
+
+#### Not
+
+Use `<>` to select records that are _not equal_ to a certain value:
+
+```sql
+SELECT *
+FROM ingredients
+WHERE type <> 'fruit';
+```
+
+### And
+
+What if we wanted to only select ingredients that are vegetables _AND_ have IDs that are less than 20?
+
+```sql
+SELECT *
+FROM ingredients
+WHERE type = 'vegetable'
+  AND id < 20;
+```
+
+### Or
+
+You get the idea...
+
+```sql
+SELECT *
+FROM ingredients
+WHERE id <= 10
+  OR id >= 20;
+```
+
+### Order By
+
+#### ASC
+
+Let's say you wanted to order your results not by `id` or insertion order but by `title`:
+
+```sql /title/
+SELECT * FROM ingredients
+ORDER BY title;
+```
+
+This will alphabetize your returned list (in ascending `ASC` order by default).
+
+#### DESC
+
+The following will start by the largest `id` number and count backwards:
+
+```sql /DESC/
+SELECT * FROM ingredients
+ORDER BY id DESC;
+```
+
+<br />
+
+<IntroToPostgreSQLCOURSE />
+
+---
+
+<LastUpdated updated={updated} />

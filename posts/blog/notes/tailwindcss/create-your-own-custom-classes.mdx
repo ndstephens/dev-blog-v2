@@ -1,0 +1,226 @@
+---
+title: Create Your Own Custom Classes
+description: Things to consider when creating your own custom classes in Tailwind CSS.
+created: 2023-01-22
+updated: 2023-01-22
+category: notes
+topics:
+  - Tailwind
+---
+
+## `@layer`
+
+Any custom styles you add to the `base`, `components`, or `utilities` **layers** will only be included in your compiled CSS if those styles are _actually used_ in your HTML.
+
+```css /@layer/ title="global.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* This won't be included in your compiled CSS unless you actually use it */
+  .card {
+    /* ... */
+  }
+}
+```
+
+If you want to add some custom CSS that should _always be included_, add it to your stylesheet _without_ using the `@layer` directive:
+
+```css
+@tailwind base;
+@tailwind components;
+
+/* This will always be included in your compiled CSS */
+.card {
+  /* ... */
+}
+
+@tailwind utilities;
+```
+
+## Precedence
+
+Make sure to put your custom styles where they need to go to get the **precedence** behavior you want. In the example above, we've added the `.card` class before `@tailwind utilities` to make sure utilities can still override it.
+
+Use the `@layer` directive to tell Tailwind which “bucket” a set of custom styles belong to. Valid layers are `base`, `components`, and `utilities`.
+
+```css title="global.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+}
+
+@layer components {
+  .btn-blue {
+    @apply rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700;
+  }
+}
+
+@layer utilities {
+  .filter-none {
+    filter: none;
+  }
+  .filter-grayscale {
+    filter: grayscale(100%);
+  }
+}
+```
+
+## `@layer components`
+
+By defining component classes in the `components` layer you can still use _utility classes_ to override them when necessary:
+
+```css /.card/ /border-radius/ title="global.css"
+@layer components {
+  .card {
+    background-color: theme(colors.white);
+    border-radius: theme(borderRadius.lg);
+    padding: theme(spacing.6);
+    box-shadow: theme(boxShadow.xl);
+  }
+  /* ... */
+}
+```
+
+```html /card/ /rounded-none/
+<div class="card rounded-none">
+  <!-- ... -->
+</div>
+```
+
+The `components` layer is also a good place to put custom styles for any third-party components you're using:
+
+```css {5} title="global.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .select2-dropdown {
+    @apply rounded-b-lg shadow-md;
+  }
+  .select2-search {
+    @apply rounded border border-gray-300;
+  }
+  .select2-results__group {
+    @apply text-lg font-bold text-gray-900;
+  }
+  /* ... */
+}
+```
+
+## `@apply` directive
+
+Use `@apply` to inline any existing utility classes into your own custom CSS.
+
+Here's what a `.btn-primary` class might look like using `@apply` to compose it with existing Tailwind utilities:
+
+```css /@apply/ title="global.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary {
+    @apply rounded-lg bg-blue-500 py-2 px-4 font-semibold text-white shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+  }
+}
+```
+
+You can also use `@apply` with your custom global CSS classes and customizations to the `theme`.
+
+```css {10} /.foo/ title="global.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .foo {
+    color: blue;
+  }
+  .bar {
+    @apply foo;
+  }
+}
+```
+
+## `theme` function
+
+Use the `theme` function or `@apply` directive when adding custom component styles if you want to refer to any of the values defined in your `theme`.
+
+```css /theme/ title="global.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card {
+    background-color: theme(colors.white);
+    border-radius: theme(borderRadius.lg);
+    padding: theme(spacing.6);
+    box-shadow: theme(boxShadow.xl);
+  }
+  .btn-blue {
+    background-color: theme(colors.blue.500 / 75%);
+  }
+  /* ... */
+}
+```
+
+## Modifiers
+
+Wrapping any custom CSS in a `@layer` directive also makes it possible to use modifiers with those rules, like `hover:` and `focus:` or responsive modifiers like `md:` and `lg:`.
+
+## Plugins
+
+You can also add custom styles to your project using Tailwind's `plugin` system instead of using a CSS file. CSS properties will be written in `CSS-in-JS` syntax:
+
+```js {1,6} title="tailwind.config.js"
+const plugin = require('tailwindcss/plugin');
+
+module.exports = {
+  // ...
+  plugins: [
+    plugin(function ({ addBase, addComponents, addUtilities, theme }) {
+      addBase({
+        h1: {
+          fontSize: theme('fontSize.2xl'),
+        },
+        h2: {
+          fontSize: theme('fontSize.xl'),
+        },
+      });
+      addComponents({
+        '.card': {
+          backgroundColor: theme('colors.white'),
+          borderRadius: theme('borderRadius.lg'),
+          padding: theme('spacing.6'),
+          boxShadow: theme('boxShadow.xl'),
+        },
+      });
+      addUtilities({
+        '.content-auto': {
+          contentVisibility: 'auto',
+        },
+      });
+    }),
+  ],
+};
+```
+
+<br />
+
+<TailwindDocs />
+
+---
+
+<LastUpdated updated={updated} />

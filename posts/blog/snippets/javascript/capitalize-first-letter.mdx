@@ -1,0 +1,31 @@
+---
+title: Capitalize First Letter
+description: A code snippet on how to capitalize the first letter of a string.  Includes a TypeScript example as well.
+created: 2022-11-11
+updated: 2022-11-11
+category: snippets
+topics:
+  - JavaScript
+---
+
+## JavaScript
+
+```js
+const capitalizeFirstLetter = ([firstLetter, ...restOfWord]) =>
+  firstLetter.toUpperCase() + restOfWord.join('');
+```
+
+## TypeScript
+
+```ts
+const capitalizeFirstLetter = <T extends string>([
+  firstLetter,
+  ...restOfWord
+]: T) => {
+  return (firstLetter.toUpperCase() + restOfWord.join('')) as Capitalize<T>;
+};
+```
+
+---
+
+<LastUpdated updated={updated} />

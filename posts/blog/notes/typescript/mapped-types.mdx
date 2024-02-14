@@ -1,0 +1,131 @@
+---
+title: Mapped Types
+description: Mapped Types are used to specify a specific subset of keys and allow us to transform types in a structured and deliberate way. Mapped Types are similar to the map function for arrays. The TypeScript utility Record is an example of a mapped type.
+created: 2022-08-28
+updated: 2022-08-28
+category: notes
+topics:
+  - TypeScript
+---
+
+## Review of Index Signatures
+
+First, recall **index signatures**. They're often used to loosely type out an object.
+
+```ts
+type Fruit = {
+  name: string;
+  color: string;
+  mass: number;
+};
+
+type FruitBasket = {
+  [k: string]: Fruit;
+};
+
+// Or used with Generics
+type Dict<T> = {
+  [k: string]: T;
+  // [k: string]: T | undefined; // SAFER
+};
+
+const fruitCatalog: Dict<Fruit> = {};
+fruitCatalog.pineapple; // <- allowed unless we use `T | undefined`
+```
+
+Index signature parameter types (`k`) can be an arbitrary (any) `string` or `number`.
+
+You can **NOT** specify a more narrow subset of strings or numbers when using an index signature.
+
+```ts
+type MyFruits = { [key: 'apple' | 'cherry']: Fruit }; // <- ERROR
+// Error: An index signature parameter type cannot be a literal type or generic type. Consider using a mapped object type instead.
+```
+
+They are not allowed to be a _literal type_ or a _type parameter_ (generic).
+
+For that we need **Mapped Types**.
+
+## Mapped Types
+
+Mapped types allow us to specify a specific subset of keys.
+
+This then allows us to **transform types** by taking one type and making it another type _in a very structured and deliberate way_.
+
+Think of mapped types as being analogous to the `map` function used with arrays (we'll see that in use later).
+
+Here's how a very basic mapped type looks different than an index signature:
+
+```ts
+// Index Signature
+{ [keyNameDoesNotMatter: string]: ... }
+
+// Mapped Type
+{ [FruitKey in "apple" | "cherry"]: ... }
+```
+
+In the larger context:
+
+```ts
+type Fruit = {
+  name: string;
+  color: string;
+  mass: number;
+};
+
+// mapped type
+type MyRecord = { [FruitKey in 'apple' | 'cherry']: Fruit };
+
+function printFruitCatalog(fruitCatalog: MyRecord) {
+  fruitCatalog.cherry;
+  fruitCatalog.apple;
+  // (property) apple: Fruit
+
+  fruitCatalog.pineapple; // <- ERROR
+  // Error: Property 'pineapple' does not exist on type 'MyRecord'.
+}
+```
+
+<blockquote className="attention">
+  **NOTE** the `in` keyword in the mapped type.
+</blockquote>
+
+`'apple' | 'cherry'` is the part we're looping over.
+
+The **key name** (in this case `FruitKey`) will be important and come into use later with more complex usage of mapped types.
+
+## Record
+
+If we make our type a bit more generalized (with some `type params` instead of hardcoding `Fruit` and `"apple" | "cherry"` as shown below) we'll arrive at a **built-in utility type** that comes with TypeScript.
+
+```ts
+- type MyRecord = { [FruitKey in "apple" | "cherry"]: Fruit }
+
++ type MyRecord<KeyType, ValueType> = { [Key in KeyType]: ValueType }
+```
+
+Or more specifically:
+
+```ts
+type MyRecord<KeyType extends string, ValueType> = {
+  [Key in KeyType]: ValueType;
+};
+```
+
+Here's the built-in TypeScript type, which matches this pretty much exactly:
+
+```ts
+type Record<K extends keyof any, T> = {
+  [P in K]: T;
+};
+```
+
+You may notice the `keyof any` difference. It just means `string | number | symbol`.
+
+<br />
+
+<IntermediateTSCourse />
+
+---
+
+<LastUpdated updated={updated} />

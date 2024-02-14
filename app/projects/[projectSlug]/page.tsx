@@ -2,6 +2,7 @@ import { type Metadata } from 'next';
 
 import { SkipAnchor } from '@/components/SkipToContent/SkipToContent';
 import ProjectImage from '@/components/ProjectImage/ProjectImage';
+import PageWrapper from '@/components/PageWrapper/PageWrapper';
 
 import { getAllSlugs, getProjectFromSlug } from '@/lib/api/posts';
 import { metaConfig } from '@/lib/config/metadata';
@@ -51,20 +52,18 @@ export default async function Page({
   const { title, description, gradient, imgAlt, imgUrl } = meta;
 
   return (
-    <div className="gradient-page-body flex-grow">
-      <div className="page-padding mx-auto flex h-full max-w-[58rem] flex-col justify-center py-[10vh] sm:py-[16vh]">
-        <SkipAnchor />
-        <div className="mb-10 ml-1 flex flex-col gap-y-5">
-          <h1 className="text-4xl font-semibold text-textClr-50">{title}</h1>
-          <p className="text-balance text-xl font-medium text-textClr-400">
-            {description}
-          </p>
-        </div>
-        <ProjectImage gradient={gradient} imgAlt={imgAlt} imgUrl={imgUrl} />
-        <div className="mt-12 flex justify-center sm:mt-24">
-          <article className="my-prose">{content}</article>
-        </div>
+    <PageWrapper className="max-w-narrowPageWidth">
+      <SkipAnchor />
+      <div className="mb-10 ml-1 flex flex-col gap-y-5">
+        <h1 className="text-4xl font-semibold text-textClr-50">{title}</h1>
+        <p className="text-balance text-xl font-medium text-textClr-400">
+          {description}
+        </p>
       </div>
-    </div>
+      <ProjectImage gradient={gradient} imgAlt={imgAlt} imgUrl={imgUrl} />
+      <div className="mt-12 flex justify-center sm:mt-24">
+        <article className="my-prose">{content}</article>
+      </div>
+    </PageWrapper>
   );
 }

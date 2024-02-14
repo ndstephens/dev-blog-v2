@@ -1,0 +1,103 @@
+---
+title: Function Return Types
+description: It can be important to explicitly declare function return types in TypeScript. The return type declaration helps TypeScript verify that the implementation matches the expectation and improves error notification by surfacing errors where the function is defined rather than where it is invoked. It's best to be explicit about the return type to avoid issues with possibly undefined values.
+created: 2022-08-21
+updated: 2022-08-21
+category: notes
+topics:
+  - TypeScript
+---
+
+You should explicitly state a function's return **type**, and TypeScript will then verify that your code implementation in fact matches your expectations.
+
+```ts
+function add(a: number, b: number) {}
+```
+
+Naming a function `add` and providing it with two numbers, you'd expect it'd return a value of type `number`. But here its inferred return type is `void`.
+
+```ts
+function add(a: number, b: number): number {} // <- ERROR
+```
+
+Here you would get an error after explicitly including the return type of `: number` since the code implementation does not match up.
+
+```ts
+function add(a: number, b: number): number {
+  return a + b;
+}
+```
+
+Now it would compile properly.
+
+<blockquote className="attention">
+
+**NOTE:** this does **NOT** guarantee the code executes as you'd expect. The author could have mistakenly returned the two inputs **multiplied** together instead of summed.
+
+The types may have matched, but the returned **value** would be incorrect. This is why unit tests are still necessary.
+
+TypeScript only verifies the **types**.
+
+</blockquote>
+
+## Better Error Notification
+
+It's best to explicitly state function return types b/c it changes where errors are surfaced.
+
+<blockquote className="attention">
+  Usually the error should be surfaced where the function is defined...not where
+  it is invoked throughout your code.
+</blockquote>
+
+```ts
+async function getData(url: string) {
+  const resp = await fetch(url);
+  if (resp.ok) {
+    const data = (await resp.json()) as {
+      properties: string[];
+    };
+    return data;
+  }
+}
+```
+
+The author might assume the `Promise` will always return an object.
+
+Imagine if we were passing this value through several other functions before reaching the point where type checking alerted us to a problem!
+
+```ts
+function loadData() {
+  getData('https://example.com').then((result) => {
+    console.log(result.properties.join(', ')); // ERROR..."result" could be undefined
+  });
+}
+// Error: Object is possibly 'undefined'
+// (parameter) result: {
+//   properties: string[];
+// } | undefined
+```
+
+It's best to be explicit about the return type.
+
+```ts {3,11}
+async function getData(
+  url: string
+): Promise<{ properties: string[] } | undefined> {
+  const resp = await fetch(url);
+  if (resp.ok) {
+    const data = (await resp.json()) as {
+      properties: string[];
+    };
+    return data;
+  }
+  return undefined;
+}
+```
+
+<br />
+
+<TSFundamentalsCourse />
+
+---
+
+<LastUpdated updated={updated} />

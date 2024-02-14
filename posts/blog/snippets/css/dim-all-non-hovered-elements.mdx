@@ -1,0 +1,72 @@
+---
+title: Dim All Non-Hovered Elements
+description: A code snippet on how to dim all elements that are non being hovered utilizing the CSS :has pseudo-class.
+created: 2023-02-07
+updated: 2023-02-07
+category: snippets
+topics:
+  - CSS
+---
+
+Here is an interesting use of the newer `:has()` CSS pseudo-class.
+
+All the elements in the example below will dim **except for** the element being hovered over.
+
+<blockquote className="attention">
+  This of course only works on desktop...or rather any screen/device where the
+  `:hover` pseudo-class is available.
+</blockquote>
+
+<DimNonHoveredElements />
+
+## The Code
+
+The basic code example would be as follows:
+
+```html
+<ul>
+  <li />
+  <!-- <li /> repeated 9 times -->
+</ul>
+```
+
+```css {14-15}
+ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+li {
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  background-color: #06b6d4;
+  transition: opacity 150ms ease;
+}
+
+li:has(~ li:hover),
+li:hover ~ li {
+  opacity: 0.5;
+}
+```
+
+## Using Tailwind
+
+Here is exactly how I made the example using React and Tailwind:
+
+```jsx
+<div className="mx-auto w-[min(32rem,100%)]">
+  <ul className="grid grid-cols-3 gap-[min(2rem,4vw)]">
+    {Array.from({ length: 9 }).map((_, i) => (
+      <li
+        key={i}
+        className="peer aspect-square cursor-pointer bg-cyan-500 transition-opacity peer-hover:opacity-50 [&:has(~_li:hover)]:opacity-50"
+      />
+    ))}
+  </ul>
+</div>
+```
+
+---
+
+<LastUpdated updated={updated} />

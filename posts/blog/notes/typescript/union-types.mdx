@@ -1,0 +1,176 @@
+---
+title: Union Types
+description: Union types are described using the `|` (pipe) operator and can be thought of as the logical boolean operator `OR`. The possible overlap of types in the union is the shared properties of all objects in the union. Here we explain how to use type guards and discriminated unions to determine the exact type of a value in a union type. These guards use expressions or a property of an object to identify the specific type.
+created: 2022-08-22
+updated: 2023-02-27
+category: notes
+topics:
+  - TypeScript
+---
+
+Union types in TypeScript can be described using the `|` (pipe) operator. Also conceptually thought of as the logical boolean operator `OR`.
+
+A **union** of types has the _intersection_ of those types' properties.
+
+## With Primitives
+
+TypeScript will only allow an operation on a member of a union if it is valid for every member of the union.
+
+For instance, if the union type is comprised of a `number` or a `string` then you can only use methods that apply to both types, such as `toString` or `valueOf`.
+
+You could not call `toUpperCase` without first checking that it's a `string`, since it could also be a `number`.
+
+```ts /toUpperCase()/
+function printId(id: number | string) {
+  console.log(id.toUpperCase()); // <- Error
+
+  // Property 'toUpperCase' does not exist on type 'string | number'.
+  //   Property 'toUpperCase' does not exist on type 'number'.
+}
+```
+
+### Union of Unions with Primitives
+
+A union of two or more unions (containing primitives) is a combination of all possible types.
+
+```ts
+type A = number | string;
+type B = string | boolean;
+
+type Union = A | B;
+// type Union = string | number | boolean
+```
+
+```ts
+type A = 'a' | 'b' | 'c';
+type B = 'b' | 'c' | 'd';
+
+type Union = A | B;
+// type Union = 'a' | 'b' | 'c' | 'd'
+```
+
+### Intersection of Unions with Primitives
+
+An intersection of two or more unions (containing primitives) contains the overlap of their types.
+
+```ts
+type A = number | string;
+type B = string | boolean;
+
+type Intersection = A & B;
+// type Intersection = string
+```
+
+```ts
+type A = 'a' | 'b' | 'c';
+type B = 'b' | 'c' | 'd';
+
+type Intersection = A & B;
+// type Intersection = 'b' | 'c'
+```
+
+## With Objects
+
+Types in the union can have overlap (in the case of objects and tuples), but they don't have to.
+
+The possible overlap would be any similar properties that all objects in the union share.
+
+This is in-line with the first example regarding primitives...only the properties or methods shared between the primitives in the union are available.
+
+Here's an example with objects:
+
+```ts
+const shared: Error | { name: string; email: string };
+
+shared.name; // <- works b/c both object have a property "name" of type "string"
+```
+
+When a value has a type that includes a union, we are only able to use the “common behavior” that's guaranteed to be there.
+
+That's not always helpful b/c you may in fact need to know EXACTLY which type `shared` is. To achieve that, we need to "narrow" or "separate" the potential possibilities for our value.
+
+## Type Guards and Discriminated Unions
+
+```ts /'error'/ /'success'/
+function flipCoin(): 'heads' | 'tails' {
+  if (Math.random() > 0.5) return 'heads';
+  return 'tails';
+}
+
+function maybeGetUserInfo():
+  | ['error', Error]
+  | ['success', { name: string; email: string }] {
+  if (flipCoin() === 'heads') {
+    return ['success', { name: 'Nate Stephens', email: 'nate@example.com' }];
+  } else {
+    return ['error', new Error('The coin landed on TAILS :(')];
+  }
+}
+
+const outcome = maybeGetUserInfo();
+
+// TYPE of "outcome"
+// -----------------
+// const outcome:
+//   | ['error', Error]
+//   | ['success', { name: string; email: string; } ];
+```
+
+The destructured values from `outcome` could be one of two types when looked at separately:
+
+```ts
+const outcome = maybeGetUserInfo();
+
+const [first, second] = outcome;
+
+// first: "error" | "success"
+//
+// second: Error | {
+//     name: string;
+//     email: string;
+// }
+```
+
+### Narrow with a type guard
+
+Type guards are expressions which, when used with control flow statements, allow us to identify a more specific type for a particular value.
+
+We could run a check on `second` and verify if it is either an instance of `Error` or an `object`.
+
+But a simpler approach is using the string value of `first` to determine the value of `second` in `outcome`.
+
+### Discriminated Unions (aka "Tagged" Union)
+
+Use a property in an object or a value in a tuple as a "key" to run a type guard.
+
+**TypeScript understands that the first and second positions of our tuple are linked.**
+
+Therefore, if we can successfully identify the first part of the tuple we'll know what the second part of it is.
+
+```ts
+const outcome = maybeGetUserInfo();
+if (outcome[0] === 'error') {
+  // In this branch of your code, second is an Error
+  outcome;
+  // const outcome: ["error", Error]
+} else {
+  // In this branch of your code, second is the user info
+  outcome;
+  // const outcome: ["success", {
+  //   name: string;
+  //   email: string;
+  // }]
+}
+```
+
+<br />
+
+<TSFundamentalsCourse />
+
+<ReactAndTypescriptCourse />
+
+<TypeScriptDocs />
+
+---
+
+<LastUpdated updated={updated} />

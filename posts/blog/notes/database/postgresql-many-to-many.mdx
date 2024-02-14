@@ -1,0 +1,138 @@
+---
+title: PostgreSQL Many-to-Many Relationships
+description: How to create a many-to-many relationship in PostgreSQL. This is a continuation of the notes on Foreign Keys.
+created: 2023-03-17
+updated: 2023-03-17
+category: notes
+topics:
+  - Database
+---
+
+<blockquote className="info">
+  This info is a continuation of where I left off in the [Foreign
+  Keys](/postgresql-foreign-keys) notes.
+
+The `ingredients` table discussed below was created in the notes on [Database Tables](/postgresql-databases-and-tables#create-a-table) and filled with records in the notes on [Database CRUD Commands](/postgresql-crud-commands#multiple-records).
+
+</blockquote>
+
+## Intermediary table
+
+A **many-to-many** relationship could be thought of as two **one-to-many** relationships, linked by an **intermediary table**.
+
+An intermediary table is typically referred to as a “junction table” (also as a “cross-reference table”). This table is used to link the other two tables together. It does this by having two fields that reference the _primary key_ of each of the other two tables.
+
+In this example the _many-to-many_ relationship would be:
+
+- Each recipe has _many_ ingredients.
+- Each ingredient can belong to _many_ recipes.
+
+So, you have two tables that represent the two distinct concepts (ingredients and recipes) and then you use another table to describe the relationships between them.
+
+Let's create a `recipe_ingredients` table (our intermediary table):
+
+```sql
+CREATE TABLE recipe_ingredients (
+  recipe_id INT REFERENCES recipes(recipe_id) ON DELETE NO ACTION,
+  ingredient_id INT REFERENCES ingredients(id) ON DELETE NO ACTION,
+  CONSTRAINT recipe_ingredients_pk PRIMARY KEY (recipe_id, ingredient_id)
+);
+```
+
+| Column        | Type    | Collation | Nullable | Default |
+| ------------- | ------- | --------- | -------- | ------- |
+| recipe_id     | integer |           | not null |
+| ingredient_id | integer |           | not null |
+
+```console
+Indexes:
+    "recipe_ingredients_pk" PRIMARY KEY, btree (recipe_id, ingredient_id)
+Foreign-key constraints:
+    "recipe_ingredients_ingredient_id_fkey" FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
+    "recipe_ingredients_recipe_id_fkey" FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+```
+
+`ON DELETE NO ACTION` sets this to error because we should clear out connections before we let developers delete recipes or ingredients. We don't want to cascade deletes because that could delete recipes and ingredients unintentionally and we don't want to set to null because then we'd have a bunch of half-null connections left over.
+
+`CONSTRAINT` is basically saying "the combination of `recipe_id` and `ingredient_id` must be unique" and we're setting that as the _primary key_ instead of an incrementing ID.
+
+The table describes the _many-to-many_ relationship with two _foreign keys_ between ingredients and recipes.
+
+Now, insert some records into the table to connect recipes and ingredients:
+
+```sql
+INSERT INTO recipe_ingredients
+  (recipe_id, ingredient_id)
+VALUES
+  (1, 10),
+  (1, 11),
+  (1, 13),
+  (2, 5),
+  (2, 13);
+```
+
+## Using joins
+
+Let's say you want to view the ingredients associated with a specific recipe (based on the recipe's ID):
+
+```sql
+SELECT
+  i.title AS ingredient_title,
+  i.image AS ingredient_image,
+  i.type AS ingredient_type
+FROM
+  recipe_ingredients ri
+INNER JOIN
+  ingredients i
+ON
+  i.id = ri.ingredient_id
+WHERE
+  ri.recipe_id = 1;
+```
+
+<blockquote className="attention">
+  `AS` is simply used to rename a column for your own convenience.
+</blockquote>
+
+This results in:
+
+| ingredient_title | ingredient_image | ingredient_type |
+| ---------------- | ---------------- | --------------- |
+| chicken          | chicken.jpg      | meat            |
+| corn             | corn.jpg         | vegetable       |
+| eggplant         | eggplant.jpg     | vegetable       |
+
+<br />
+
+If you want to include the recipe information as well you'll need to include a second inner join:
+
+```sql
+SELECT
+  i.title AS ingredient_title,
+  i.image AS ingredient_image,
+  i.type AS ingredient_type,
+  r.title AS recipe_title,
+  r.body AS recipe_body,
+  r.recipe_id AS rid,
+  i.id AS iid
+FROM
+  recipe_ingredients ri
+INNER JOIN
+  ingredients i
+ON
+  i.id = ri.ingredient_id
+INNER JOIN
+  recipes r
+ON
+  r.recipe_id = ri.recipe_id
+WHERE
+  ri.recipe_id = 1;
+```
+
+| ingredient_title | ingredient_image | ingredient_type | recipe_title | recipe_body | rid | iid |
+| ---------------- | ---------------- | --------------- | ------------ | ----------- | --- | --- |
+| chicken          | chicken.jpg      | meat            | cookies      | very yummy  | 1   | 10  |
+| corn             | corn.jpg         | vegetable       | cookies      | very yummy  | 1   | 11  |
+| eggplant         | eggplant.jpg     | vegetable       | cookies      | very yummy  | 1   | 13  |
+
+If you want to select and return all recipe/ingredient combinations from the `recipe_ingredients` table then simply leave off the final `WHERE ri.recipe_id = 1` clause.

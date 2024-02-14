@@ -1,0 +1,63 @@
+---
+title: PostgreSQL Functions and Operators
+description: PostgreSQL provides a large number of functions and operators for the built-in data types.  Here I briefly go over LIKE and ILIKE, two symbols used for character matching, and the CONCAT function.  These all allow for basic fuzzy searching of your data.
+created: 2023-03-15
+updated: 2023-03-15
+category: notes
+topics:
+  - Database
+---
+
+The complete list of PostgreSQL functions and operators can be found [here](https://www.postgresql.org/docs/current/functions.html).
+
+## LIKE and ILIKE
+
+Sometimes you want to search for something in your database but it's not an exact match.
+
+`LIKE` and `ILIKE` are for very limited fuzzy matching of text. They are not doing things like dropping "stop words" (like and, the, with, etc.) or handling plurals, or handling similar spellings (like color vs colour).
+
+```sql
+SELECT * FROM ingredients
+WHERE title LIKE '%pota%';
+```
+
+You would expect a search for "pota" to match "potato".
+
+`ILIKE` does the same thing, just with case _insensitivity_.
+
+## Character matching
+
+Use in combination with `LIKE` and `ILIKE`, the symbols `%` and `_` are for character matching.
+
+`%` matches 0 to infinite characters.
+
+`_` will match exactly 1 character.
+
+Placement of these symbols matters.
+
+So with `"%berry"` you would match "strawberry" and "blueberry" but not "berry ice cream". That's because the `%` was only at the beginning so it wouldn't match anything after "berry".
+
+For that you'd need `"%berry%"` to match both "strawberry" and "blueberry ice cream".
+
+You can put `%` anywhere. `"b%t"` will match "bt", "bot", "but", "belt", and "belligerent".
+
+Remember that `_` will match 1 and only one character. `"b_t"` will match "bot" and "but" but not "bt", "belt", or "belligerent".
+
+## CONCAT
+
+`CONCAT()` is a function that can take strings and combine them together.
+
+We can concat our `title` and `type` columns and then use `ILIKE` on the results of that combined string.
+
+```sql
+SELECT * FROM ingredients
+WHERE CONCAT(title, type) ILIKE '%fruit%';
+```
+
+<br />
+
+<IntroToPostgreSQLCOURSE />
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,59 @@
+---
+title: Unstyled List's role Attribute
+description: Unstyled lists are not announced as lists by VoiceOver. If your content is truly a list but you would like to keep it unstyled, add a “list” role to the element.
+created: 2022-11-07
+updated: 2022-11-07
+category: articles
+topics:
+  - Accessibility
+  - Tailwind
+---
+
+Unstyled lists (usually unordered lists `<ul>` with their `list-style` CSS property set to `none`) are not announced as _lists_ by [VoiceOver](https://en.wikipedia.org/wiki/VoiceOver) (the screen reader built into Apple operating systems).
+
+This means Safari will not read them out correctly. Screen readers also read out the _number of list items_ (`<li>`) when they come across a list. This too will not work correctly. Reading the number of items is very helpful when, for example, reading the number of items in your site's navigation.
+
+If your content is truly a list but you would like to keep it _unstyled_, add a **“list” role** to the element:
+
+```css
+ol,
+ul {
+  list-style: none;
+}
+```
+
+```html {1}
+<ul role="list">
+  <li>One</li>
+  <li>Two</li>
+  <li>Three</li>
+</ul>
+```
+
+## If Using Tailwind CSS
+
+<blockquote className="attention">
+  This is very important to keep in mind if you use Tailwind CSS.
+</blockquote>
+
+Tailwind adds an [opinionated set of base styles](https://tailwindcss.com/docs/preflight) (a CSS "normalize" of sorts) when you include `@tailwind base` to your global CSS...which is pretty much always.
+
+In those base styles they remove list styling from both their ordered and unordered lists:
+
+```css title="preflight.css" {4}
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+```
+
+Unless you override that in your global CSS file (or on an individual basis) then that means all your lists are unstyled by default. If you want them working correctly with VoiceOver you'll need to decide which lists need their `role` attribute set to `"list"` and perform the updates.
+
+I don't remember when or where I came across this very obscure bit of information so I figured it's worth sharing.
+
+---
+
+<LastUpdated updated={updated} />

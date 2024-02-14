@@ -1,0 +1,460 @@
+---
+title: Semantic HTML - Content Sectioning
+description: Content sectioning elements allow you to organize the document content into logical pieces. Use the sectioning elements to create a broad outline for your page content, including header and footer navigation, and heading elements to identify sections of content.
+created: 2023-03-04
+updated: 2023-03-04
+category: notes
+topics:
+  - Accessibility
+  - HTML
+---
+
+[Content sectioning elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#content_sectioning) allow you to organize the document content into logical pieces. Use the sectioning elements to create a broad outline for your page content, including header and footer navigation, and heading elements to identify sections of content.
+
+## `<header>`
+
+Represents introductory content, typically a group of introductory or navigational aids.
+
+It may contain some heading elements (`<h1>` - `<h6>`) but also a logo, a search form, an author name, and other elements.
+
+### Usage
+
+The `<header>` element defines a **banner landmark** when its context is the `<body>` element.
+
+The `<header>` is _not_ considered a banner landmark when it is a descendant of sectioning content, such `<article>`, `<aside>`, `<main>`, `<nav>`, or `<section>` element. In that case it is a `section` in the accessibility tree, and usually contains the surrounding section's heading (an `h1` – `h6` element) and optional subheading, but this is _not_ required.
+
+### Examples
+
+#### Page Header
+
+```html
+<header>
+  <nav>...</nav>
+  <h1>Main Page Title</h1>
+  <img src="company-logo.png" alt="Company logo" />
+</header>
+```
+
+#### Article Header
+
+```html
+<article>
+  <header>
+    <h2>The Planet Earth</h2>
+    <p>
+      Posted on Wednesday, <time datetime="2017-10-04">4 October 2017</time> by
+      Jane Smith
+    </p>
+  </header>
+  <p>
+    We live on a planet that's blue and green, with so many things still unseen.
+  </p>
+  <p><a href="https://example.com/the-planet-earth/">Continue reading…</a></p>
+</article>
+```
+
+---
+
+## `<h1>` - `<h6>`
+
+Represent six levels of section headings. `<h1>` is the highest section level and `<h6>` is the lowest.
+
+### Usage
+
+A page should generally have a _single_ `<h1>` element that describes the content of the page (similar to the document's `<title>` element).
+
+Do not skip heading levels: always start from `<h1>`, followed by `<h2>` and so on. A common navigation technique for users of screen reading software is jumping from heading to heading to quickly determine the content of the page.
+
+Do not use heading elements to resize text. Instead, use the CSS `font-size` property.
+
+### Examples
+
+#### Label section content
+
+```html
+<header>
+  <nav aria-labelledby="primary-navigation">
+    <h2 id="primary-navigation">Primary navigation</h2>
+    <!-- navigation items -->
+  </nav>
+</header>
+
+<!-- page content -->
+
+<footer>
+  <nav aria-labelledby="footer-navigation">
+    <h2 id="footer-navigation">Footer navigation</h2>
+    <!-- navigation items -->
+  </nav>
+</footer>
+```
+
+Screen reading technology would announce that there are two `<nav>` sections, one called _"Primary navigation"_ and one called _"Footer navigation"_. If labels were not provided, the person using screen reading software may have to investigate each nav element's contents to determine their purpose.
+
+---
+
+## `<nav>`
+
+Represents a section of a page whose purpose is to provide _navigation links_, either within the current document or to other documents.
+
+Common examples of navigation sections are menus, tables of contents, and indexes.
+
+### Usage
+
+It's not necessary for all links to be contained in a `<nav>`element.`<nav>`is intended only for a major block of navigation links; typically the`<footer>` element often has a list of links that don't need to be in a `<nav>` element.
+
+A document may have several `<nav>` elements, for example, one for site navigation and one for intra-page navigation. `aria-labelledby` can be used in such cases to promote accessibility.
+
+### Examples
+
+```html
+<nav>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+```
+
+A `nav` element doesn't have to contain a list, it can contain other kinds of content as well. In this navigation block, links are provided in prose:
+
+```html
+<nav>
+  <h2>Navigation</h2>
+  <p>
+    You are on my home page. To the north lies <a href="/blog">my blog</a>, from
+    whence the sounds of battle can be heard. To the east you can see a large
+    mountain, upon which many <a href="/school">school papers</a> are littered.
+    Far up thus mountain you can spy a little figure who appears to be me,
+    desperately scribbling a <a href="/school/thesis">thesis</a>.
+  </p>
+  <p>
+    To the west are several exits. One fun-looking exit is labeled
+    <a href="https://games.example.com/">"games"</a>. Another more
+    boring-looking exit is labeled <a href="https://isp.example.net/">ISP™</a>.
+  </p>
+  <p>
+    To the south lies a dark and dank <a href="/about">contacts page</a>.
+    Cobwebs cover its disused entrance, and at one point you see a rat run
+    quickly out of the page.
+  </p>
+</nav>
+```
+
+---
+
+## `<main>`
+
+Represents the dominant content of the body of a document.
+
+The `main` content area consists of content that is directly related to or expands upon the _central topic_ of a document, or the _central functionality_ of an application.
+
+### Usage
+
+A document should only have a single `<main>` element.
+
+The `<main>` element behaves like a **main landmark role**. (Landmarks can be used by assistive technology to quickly identify and navigate to large sections of the document.)
+
+The content of a `<main>` element should be unique to the document. Content that is repeated across a set of documents or document sections such as sidebars, navigation links, copyright information, site logos, and search forms shouldn't be included unless the search form is the main function of the page.
+
+`<main>` _is strictly informative_, it doesn't contribute to the document's outline. Unlike elements such as `<body>`, headings such as `h2`, and such, `<main>` doesn't affect the DOM's concept of the structure of the page.
+
+#### Skip navigation
+
+[Skip navigation](https://webaim.org/techniques/skipnav/), also known as "skipnav", is a technique that allows an assistive technology user to quickly bypass large sections of repeated content (main navigation, info banners, etc.). This lets the user access the main content of the page faster.
+
+Adding an `id` attribute to the `<main>` element lets it be a target of a skip navigation link.
+
+### Examples
+
+```html
+<!-- other content -->
+
+<main>
+  <h1>Apples</h1>
+  <p>The apple is the pomaceous fruit of the apple tree.</p>
+
+  <article>
+    <h2>Red Delicious</h2>
+    <p>
+      These bright red apples are the most common found in many supermarkets.
+    </p>
+    <p>…</p>
+    <p>…</p>
+  </article>
+
+  <article>
+    <h2>Granny Smith</h2>
+    <p>These juicy, green apples make a great filling for apple pies.</p>
+    <p>…</p>
+    <p>…</p>
+  </article>
+</main>
+
+<!-- other content -->
+```
+
+---
+
+## `<article>`
+
+Represents a _self-contained composition_ in a document, page, application, or site, which is intended to be _independently distributable or reusable_ (e.g., in syndication).
+
+Examples include: a forum post, a magazine or newspaper article, or a blog entry, a product card, a user-submitted comment, an interactive widget or gadget, or any other _independent item of content_.
+
+A given document can have multiple articles in it; for example, on a blog that shows the text of each article one after another as the reader scrolls, each post would be contained in an `<article>` element, possibly with one or more `<section>`s within.
+
+### Usage
+
+Each `<article>` should be _identified_, typically by including a heading (`<h1>` - `<h6>` element) as a child element.
+
+When an `<article>` element is nested, the inner element represents an article related to the outer element. For example, the comments of a blog post can be `<article>` elements nested in the `<article>` representing the blog post.
+
+Author information of an `<article>` element can be provided through the `<address>` element, but it doesn't apply to nested `<article>` elements.
+
+The publication date and time of an `<article>` element can be described using the `datetime` attribute of a `<time>` element.
+
+### Examples
+
+#### Nested `<article>`'s
+
+```html
+<article class="forecast">
+  <h1>Weather forecast for Seattle</h1>
+  <article class="day-forecast">
+    <h2>03 March 2018</h2>
+    <p>Rain.</p>
+  </article>
+  <article class="day-forecast">
+    <h2>04 March 2018</h2>
+    <p>Periods of rain.</p>
+  </article>
+  <article class="day-forecast">
+    <h2>05 March 2018</h2>
+    <p>Heavy rain.</p>
+  </article>
+</article>
+```
+
+#### Comments
+
+```html
+<article class="film_review">
+  <h2>Jurassic Park</h2>
+  <section class="main_review">
+    <h3>Review</h3>
+    <p>Dinos were great!</p>
+  </section>
+  <section class="user_reviews">
+    <h3>User reviews</h3>
+    <article class="user_review">
+      <h4>Too scary!</h4>
+      <p>Way too scary for me.</p>
+      <footer>
+        <p>
+          Posted on
+          <time datetime="2015-05-16 19:00">May 16</time>
+          by Lisa.
+        </p>
+      </footer>
+    </article>
+    <article class="user_review">
+      <h4>Love the dinos!</h4>
+      <p>I agree, dinos are my favorite.</p>
+      <footer>
+        <p>
+          Posted on
+          <time datetime="2015-05-17 19:00">May 17</time>
+          by Tom.
+        </p>
+      </footer>
+    </article>
+  </section>
+  <footer>
+    <p>
+      Posted on
+      <time datetime="2015-05-15 19:00">May 15</time>
+      by Staff.
+    </p>
+  </footer>
+</article>
+```
+
+---
+
+## `<aside>`
+
+Represents a portion of a document whose content is only _indirectly related to_ the document's main content.
+
+Asides are frequently presented as sidebars or call-out boxes.
+
+### Usage
+
+Do _not_ use the `<aside>` element to tag parenthesized text, as this kind of text is considered part of the main flow.
+
+### Examples
+
+This example uses `<aside>` to mark up a paragraph in an article. The paragraph is only indirectly related to the main article content:
+
+```html
+<article>
+  <p>
+    The Disney movie <cite>The Little Mermaid</cite> was first released to
+    theatres in 1989.
+  </p>
+  <aside>
+    <p>The movie earned $87 million during its initial release.</p>
+  </aside>
+  <p>More info about the movie…</p>
+</article>
+```
+
+---
+
+## `<section>`
+
+Represents a _generic standalone_ section of a document, which doesn't have a more specific semantic element to represent it.
+
+_Sections should always have a heading_, with very few exceptions.
+
+Circumstances where you might see `<section>` used without a heading are typically found in web application/UI sections rather than in traditional document structures. In a document, it doesn't really make any sense to have a separate section of content without a heading to describe its contents.
+
+Such headings are useful for all readers, but particularly useful for users of _assistive technologies_ like screen readers, and they are also good for _SEO_.
+
+### Usage
+
+- If the contents of the element represent a standalone, atomic unit of content that makes sense syndicated as a standalone piece (e.g. a blog post or blog comment, or a newspaper article), the `<article>` element would be a better choice.
+- If the contents represent useful tangential information that works alongside the main content, but is not directly part of it (like related links, or an author bio), use an `<aside>`.
+- If the contents represent the main content area of a document, use `<main>`.
+- If you are only using the element as a styling wrapper, use a `<div>` instead.
+- If the contents are a list of search results, or a map display with controls that don't have specific elements, they could be put inside a `<section>`.
+
+### Examples
+
+#### Correct usage:
+
+```html
+<h1>Choosing an Apple</h1>
+<section>
+  <h2>Introduction</h2>
+  <p>
+    This document provides a guide to help with the important task of choosing
+    the correct Apple.
+  </p>
+</section>
+
+<section>
+  <h2>Criteria</h2>
+  <p>
+    There are many different criteria to be considered when choosing an Apple —
+    size, color, firmness, sweetness, tartness...
+  </p>
+</section>
+```
+
+#### Use a `<nav>`
+
+While debatable, its possibly better to use a `<nav>` in the following circumstance
+
+```html
+<section>
+  <a href="#">Previous article</a>
+  <a href="#">Next article</a>
+</section>
+
+<!-- Or instead... -->
+
+<nav aria-label="Page">
+  <a href="#">Previous article</a>
+  <a href="#">Next article</a>
+</nav>
+```
+
+#### Use a `<menu>`
+
+Also debatable, but `<menu>` is for "interactive lists" such as a button group powered with JS options.
+
+```jsx
+<section>
+  <button onClick={reply}>Reply</button>
+  <button onClick={replyAll}>Reply to all</button>
+  <button onClick={fwd}>Forward</button>
+  <button onClick={del}>Delete</button>
+</section>
+
+<!-- Or instead... -->
+
+<menu>
+  <li><button onClick={reply}>Reply</button></li>
+  <li><button onClick={replyAll}>Reply to all</button></li>
+  <li><button onClick={fwd}>Forward</button></li>
+  <li><button onClick={del}>Delete</button></li>
+</menu>
+```
+
+---
+
+## `<address>`
+
+Indicates that the enclosed HTML provides contact information for a person or people, or for an organization.
+
+The contact information provided by an `<address>` element's contents can take whatever form is appropriate for the context, and may include any type of contact information that is needed, such as a physical address, URL, email address, phone number, social media handle, geographic coordinates, and so forth.
+
+### Usage
+
+The `<address>` element can only be used to represent the contact information for its nearest `<article>` or `<body>` element ancestor.
+
+The `<address>` element should include the name of the person, people, or organization to which the contact information refers.
+
+This element should not contain more information than the contact information, like a publication date (which belongs in a `<time>` element).
+
+Typically an `<address>` element can be placed inside the `<footer>` element of the current section, if any.
+
+### Examples
+
+```html
+<address>
+  You can contact author at
+  <a href="http://www.somedomain.com/contact"> www.somedomain.com</a>.<br />
+  If you see any bugs, please
+  <a href="mailto:webmaster@somedomain.com"> contact webmaster</a>.<br />
+  You may also want to visit us:<br />
+  Mozilla Foundation<br />
+  331 E Evelyn Ave<br />
+  Mountain View, CA 94041<br />
+  USA
+</address>
+```
+
+---
+
+## `<footer>`
+
+Represents a footer for its nearest ancestor sectioning content or sectioning root element.
+
+A `<footer>` typically contains information about the author of the section, copyright data or links to related documents.
+
+### Usage
+
+Enclose information about the author in an `<address>` element that can be included into the `<footer>` element.
+
+When the nearest ancestor sectioning content or sectioning root element is the body element the footer applies to the whole page.
+
+### Examples
+
+The footer to an article:
+
+```html
+<footer>
+  Some copyright info or perhaps some author info for an <article>.
+</footer>
+```
+
+<br />
+
+<MDNDocs />
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,51 @@
+---
+title: Define a Union Type from an Object
+description: A code snippet on how to define a TypeScript union type from an object.
+created: 2022-11-24
+updated: 2022-11-24
+category: snippets
+topics:
+  - TypeScript
+---
+
+Can be an object of anything. Just need to use an `as const` assertion on the object.
+
+```ts
+const themeOptions = {
+  system: {
+    label: 'System',
+    value: 'system',
+    icon: OSIcon,
+  },
+  light: {
+    label: 'Light',
+    value: 'light',
+    icon: SunIcon,
+  },
+  dark: {
+    label: 'Dark',
+    value: 'dark',
+    icon: MoonIcon,
+  },
+} as const;
+
+type ThemeOption = (typeof themeOptions)[keyof typeof themeOptions];
+
+// type ThemeOption = {
+//     readonly label: "System";
+//     readonly value: "system";
+//     readonly icon: any;
+// } | {
+//     readonly label: "Light";
+//     readonly value: "light";
+//     readonly icon: any;
+// } | {
+//     readonly label: "Dark";
+//     readonly value: "dark";
+//     readonly icon: any;
+// }
+```
+
+---
+
+<LastUpdated updated={updated} />

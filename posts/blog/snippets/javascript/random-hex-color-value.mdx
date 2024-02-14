@@ -1,0 +1,21 @@
+---
+title: Random HEX Color Value
+description: A code snippet on how to generate a random hex color value.
+created: 2023-01-01
+updated: 2023-01-01
+category: snippets
+topics:
+  - JavaScript
+---
+
+```js
+Math.floor(Math.random() * 0xffffff).toString(16);
+
+// or...
+
+`#${Math.floor(Math.random() * 0xffffff).toString(16)}`;
+```
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,32 @@
+---
+title: Remove Duplicate Values in an Array
+description: A code snippet on how to remove duplicate values in an array.
+created: 2023-01-01
+updated: 2023-01-01
+category: snippets
+topics:
+  - JavaScript
+---
+
+## Single Array
+
+```js
+const arr = ['foo', 'bar', 'baz', 'foo'];
+
+const noDuplicates = [...new Set(arr)];
+// ['foo', 'bar', 'baz']
+```
+
+## Multiple Arrays
+
+```js
+const arr1 = ['foo', 'bar', 'baz', 'foo'];
+const arr2 = ['baz', 'bingo'];
+
+const noDuplicates = [...new Set([...arr1, ...arr2])];
+//['foo', 'bar', 'baz', 'bingo']
+```
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,51 @@
+---
+title: Define a Union Type from an Array
+description: A code snippet on how to define a TypeScript union type from an array.
+created: 2022-11-24
+updated: 2022-11-24
+category: snippets
+topics:
+  - TypeScript
+---
+
+Can be an array of anything. Just need to use an `as const` assertion on the array.
+
+```ts
+const themeOptions = [
+  {
+    label: 'System',
+    value: 'system',
+    icon: OSIcon,
+  },
+  {
+    label: 'Light',
+    value: 'light',
+    icon: SunIcon,
+  },
+  {
+    label: 'Dark',
+    value: 'dark',
+    icon: MoonIcon,
+  },
+] as const;
+
+type ThemeOption = (typeof themeOptions)[number];
+
+// type ThemeOption = {
+//     readonly label: "System";
+//     readonly value: "system";
+//     readonly icon: any;
+// } | {
+//     readonly label: "Light";
+//     readonly value: "light";
+//     readonly icon: any;
+// } | {
+//     readonly label: "Dark";
+//     readonly value: "dark";
+//     readonly icon: any;
+// }
+```
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,32 @@
+---
+title: Get and Set CSS Variable Values
+description: A code snippet on how to get and set CSS variable (custom property) values.
+created: 2021-05-12
+updated: 2021-05-12
+category: snippets
+topics:
+  - CSS
+---
+
+I always forget how to do this and need to look it up.
+
+## Get
+
+```js
+const primaryColorValue = getComputedStyle(
+  document.documentElement
+).getPropertyValue('--color-primary');
+```
+
+## Set
+
+```js
+document.documentElement.style.setProperty(
+  '--color-primary',
+  'hsl(230deg 100% 67%)'
+);
+```
+
+---
+
+<LastUpdated updated={updated} />

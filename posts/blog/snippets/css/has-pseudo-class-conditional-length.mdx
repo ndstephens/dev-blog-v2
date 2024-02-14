@@ -1,0 +1,33 @@
+---
+title: Use :has() Based On Number of Children
+description: A code snippet on how to use the :has() CSS pseudo-class conditionally based on its children's length.
+created: 2023-03-06
+updated: 2023-03-06
+category: snippets
+topics:
+  - CSS
+---
+
+Here's an example of using the CSS `:has()` pseudo-class to conditionally apply styles based on a minimum length of its total number of children elements.
+
+```css
+ul:has(li:nth-child(6)) {
+  columns: 2;
+}
+```
+
+If there are at least 6 `<li>` children elements then apply `columns: 2;` to the `<ul>`.
+
+You can then follow that up with another conditional if there are even more children.
+
+```css
+ul:has(li:nth-child(11)) {
+  columns: 3;
+}
+```
+
+Just be sure to have the more specific condition (in this case `11`) lower down the cascade.
+
+---
+
+<LastUpdated updated={updated} />

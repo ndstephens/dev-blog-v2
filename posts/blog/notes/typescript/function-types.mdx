@@ -1,0 +1,73 @@
+---
+title: Function Types
+description: There are two different approaches to defining function types in TypeScript. The first approach uses a type alias to specify the input and return types of a function, while the second approach uses an interface. Also note the `void` type, which is used to describe the return type of a function whose return value is intended to be ignored. Setting a function's return type to `void` can help prevent errors.
+created: 2022-08-23
+updated: 2022-08-23
+category: notes
+topics:
+  - TypeScript
+---
+
+## Callable types (aka Call signature)
+
+Create a type alias (or interface) of a function (its param and return types):
+
+<blockquote className="attention">
+  You will almost always use the `type alias` approach
+</blockquote>
+
+```ts
+// TYPE ALIAS
+type TwoNumberCalc = (x: number, y: number) => number;
+
+const subtract: TwoNumberCalc = (x, y) => x - y;
+
+// INTERFACE
+interface TwoNumberCalculation {
+  (x: number, y: number): number;
+}
+
+const add: TwoNumberCalculation = (a, b) => a + b;
+```
+
+## `void`
+
+`void` is a special type that's specifically used to describe a function **return** type.
+
+The return **value** of a `void` function is intended to be **IGNORED**.
+
+In JavaScript, a function that doesn't appear to return any **value** actually returns `undefined`.
+
+<blockquote className="attention">
+  A function returning `undefined` and a function's return type being set to
+  `void` are not necessarily synonymous.
+</blockquote>
+
+You can set any function's **return type** to `void` if you intend to ignore its return value.
+
+```ts {9} /undefined/ /void/
+function invokeInFourSeconds(callback: () => undefined) {
+  setTimeout(callback, 4000);
+}
+function invokeInFiveSeconds(callback: () => void) {
+  setTimeout(callback, 5000);
+}
+
+const values: number[] = [];
+invokeInFourSeconds(() => values.push(4)); // <- ERROR
+// Type 'number' is not assignable to type 'undefined'.
+invokeInFiveSeconds(() => values.push(4));
+```
+
+<blockquote className="attention">
+  `Array.prototype.push` returns a number, and our `invokeInFourSeconds`
+  function above is unhappy about this being returned from the callback.
+</blockquote>
+
+<br />
+
+<TSFundamentalsCourse />
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,34 @@
+---
+title: Write Text to the Clipboard
+description: A code snippet on how to write text to the clipboard using JavaScript.
+created: 2022-12-31
+updated: 2022-12-31
+category: snippets
+topics:
+  - JavaScript
+---
+
+```js
+const copyText = (textToCopy) =>
+  navigator.clipboard.writeText(textToCopy).then(
+    () => {
+      /* clipboard successfully set */
+    },
+    () => {
+      /* clipboard write failed */
+    }
+  );
+```
+
+[Clipboard.writeText() documentation](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText)
+
+<blockquote className="attention">
+The user has to interact with the page or a UI element in order for this feature to work (would need to call the `copyText` function in an event listener).
+
+The `"clipboard-write"` permission of the `Permissions API` is granted automatically to pages when they are in the active tab.
+
+</blockquote>
+
+---
+
+<LastUpdated updated={updated} />

@@ -1,0 +1,199 @@
+---
+title: PostgreSQL Databases and Tables
+description: Here is a quick guide on how to run PostgreSQL in Docker. It further explains how to create a database, tables, and records, as well as how to drop and alter tables. It also provides examples of psql commands and explains how to use them.
+created: 2023-03-13
+updated: 2023-03-15
+category: notes
+topics:
+  - Database
+---
+
+## Run PostgreSQL in Docker
+
+```bash
+# first, pull down a postgres docker image
+docker pull postgres:<version>
+
+# then run it in a container
+docker run -e POSTGRES_PASSWORD=<password> --name=pg --rm -d -p 5432:5432 postgres:<version>
+```
+
+This will run a container with PostgreSQL in the background.
+
+- Give it a password.
+- Give it a name so you can refer to it with that shorthand later...here I'm using `pg`
+- Use the `--rm` flag so the container deletes itself afterwards (rather than leave its logs and such around).
+- Run it in the background with `-d`.
+- The `-p` allows you to expose port `5432` locally which is the port Postgres runs on by default.
+- Finally, include the name of the image you pulled.
+
+You can run `docker ps` to see it running. You can also see it in the _Docker Desktop_ app running under the containers tab.
+
+Run `docker kill <name>` to kill the container.
+
+## `psql`
+
+### Connect with `psql`
+
+Connect to the running container with `psql`, the CLI tool for connecting to Postgres.
+
+```bash
+docker exec -u postgres -it pg psql
+```
+
+- `exec` is a Docker command used to run a command in a running container 🤯.
+- `-u postgres` to connect as the user `postgres` (aka "owner").
+- `-it` to make the connection _"interactive"_.
+- `pg` is the name of the container we want to run a command on.
+- `psql` is the command we want to run in the `pg` container.
+
+### `psql` commands
+
+- `\?` help list.
+- `\l` list all the databases.
+- `\c <database-name>` to connect to a specific database.
+- `\d` list all tables in currently connected database.
+- `\d <table-name>` to view details (columns) of the table
+
+## Databases
+
+### Default databases
+
+`template1` is what Postgres uses by default when you create a database. If you want your databases to have a default shape, you can modify `template1` to suit that.
+
+`template0` should never be modified. If your `template1` gets out of whack, you can drop it and recreate from the fresh `template0`.
+
+`postgres` exists for the purpose of a default database to connect to. We're actually connected to it by default since we didn't specify a database to connect to. You can technically could delete it but there's no reason to and a lot of tools and extensions do rely on it being there.
+
+### Create a database
+
+```sql
+CREATE DATABASE recipedb;
+```
+
+<blockquote className="attention">
+  SQL commands must end with a semicolon (`;`) in `psql`
+</blockquote>
+
+#### Connect to the db
+
+```bash
+postgres=# \c recipedb;
+# prompt changes to...
+recipedb=#
+```
+
+## Tables
+
+### Create a table
+
+```sql
+CREATE TABLE ingredients (
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title VARCHAR(255) UNIQUE NOT NULL
+);
+```
+
+<blockquote className="attention">
+  SQL commands can stretch over multiple lines (mind your commas where
+  necessary)
+</blockquote>
+
+#### List the tables
+
+```bash
+recipedb=# \d
+```
+
+| Schema | Name               | Type     | Owner    |
+| ------ | ------------------ | -------- | -------- |
+| public | ingredients        | table    | postgres |
+| public | ingredients_id_seq | sequence | postgres |
+
+The `sequence` type stores the _id counter_.
+
+#### View the table schema
+
+```bash
+recipedb=# \d ingredients
+```
+
+| Column | Type                   | Collation | Nullable | Default                      |
+| ------ | ---------------------- | --------- | -------- | ---------------------------- |
+| id     | integer                |           | not null | generated always as identity |
+| title  | character varying(255) |           | not null |
+
+### Add a record to the table
+
+```sql
+INSERT INTO ingredients (title) VALUES ('bell pepper');
+```
+
+The `id` field gets created automatically since we created it using the property `GENERATED ALWAYS AS IDENTITY`.
+
+#### View the record
+
+```sql
+SELECT * FROM ingredients;
+```
+
+| id  | title       |
+| --- | ----------- |
+| 1   | bell pepper |
+
+### Drop a table
+
+```sql
+DROP TABLE ingredients;
+```
+
+Like `rm` in bash, it's not one you can recover from. Once a table is dropped, it is dropped.
+
+### Alter a table
+
+#### Add columns
+
+```sql
+ALTER TABLE ingredients ADD COLUMN image VARCHAR(255);
+```
+
+```sql
+ALTER TABLE ingredients
+ADD COLUMN image VARCHAR ( 255 ),
+ADD COLUMN type VARCHAR ( 50 ) NOT NULL DEFAULT 'vegetable';
+```
+
+<blockquote className="attention">
+It's best to do multiple related operations in a single command/query.
+
+If it's going to fail you want the whole thing to fail, not some to succeed and others to possibly fail. That way you can try it again.
+
+This is called "transactional". It's the best approach for maintaining data integrity.
+
+</blockquote>
+
+It's also worth noting the final operation in the command.
+
+Since we're saying the field must have a value (`NOT NULL`), and assuming this table already has records in it, then we'd need to provide it with a default value. (That value could be an empty string).
+
+If our table is still empty then we would not need to provide a default value.
+
+#### Drop columns
+
+```sql
+ALTER TABLE ingredients DROP COLUMN image;
+```
+
+## Data types
+
+You can view the long list of [data types](https://www.postgresql.org/docs/current/datatype.html) that PostgreSQL offers.
+
+More can be added using plugins.
+
+<br />
+
+<IntroToPostgreSQLCOURSE />
+
+---
+
+<LastUpdated updated={updated} />

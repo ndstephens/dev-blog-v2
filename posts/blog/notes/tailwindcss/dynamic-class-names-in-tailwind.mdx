@@ -1,0 +1,41 @@
+---
+title: Dynamic Class Names in Tailwind
+description: Tailwind will only find classes that exist as complete unbroken strings in your source files. If you use string interpolation or concatenate partial class names together, Tailwind will not find them and therefore will not generate the corresponding CSS
+created: 2022-11-08
+updated: 2022-11-08
+category: notes
+topics:
+  - Tailwind
+---
+
+Here's a quick one that will hopefully help someone prevent or fix a self-imposed bug in their code.
+
+Creating a dynamic class name the **wrong way** (see below) feels like a very intuitive approach for many developers.
+
+I personally made this mistake and it took me a while to realize what the problem was...and I had previously read through the docs 🤓. The info is [there](https://tailwindcss.com/docs/content-configuration#dynamic-class-names), I just happened to forget about it.
+
+Tailwind will only find classes that exist as _complete unbroken strings_ in your source files.
+
+## Don't Do
+
+If you use string interpolation or concatenate partial class names together, Tailwind _will not find them_ and therefore will not generate the corresponding CSS:
+
+```html
+<div class="text-{{ error ? 'red' : 'green' }}-600"></div>
+```
+
+## Do Do
+
+Instead, make sure any class names you're using exist in full:
+
+```html
+<div class="{{ error ? 'text-red-600' : 'text-green-600' }}"></div>
+```
+
+<br />
+
+<TailwindDocs />
+
+---
+
+<LastUpdated updated={updated} />

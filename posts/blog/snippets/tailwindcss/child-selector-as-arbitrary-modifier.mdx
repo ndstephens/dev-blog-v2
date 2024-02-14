@@ -1,0 +1,27 @@
+---
+title: Child Selector as an Arbitrary Modifier
+description: A code snippet on how to create an arbitrary child selector in Tailwind CSS.
+created: 2022-11-10
+updated: 2022-11-10
+category: snippets
+topics:
+  - Tailwind
+---
+
+This **arbitrary modifier** selects all `p` elements within the element where you’ve added the class:
+
+```html /[&_p]/
+<div class="[&_p]:mt-4">
+  <p>Lorem ipsum...</p>
+  <ul>
+    <li>
+      <p>Lorem ipsum...</p>
+    </li>
+    <!-- ... -->
+  </ul>
+</div>
+```
+
+---
+
+<LastUpdated updated={updated} />

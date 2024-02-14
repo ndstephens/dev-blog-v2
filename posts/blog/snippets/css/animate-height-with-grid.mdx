@@ -1,0 +1,91 @@
+---
+title: Animate Height Using CSS Grid
+description: A code snippet on how to animate the height of an element using CSS Grid.
+created: 2022-12-24
+updated: 2022-12-24
+category: snippets
+topics:
+  - CSS
+---
+
+The CSS property `height` can not be animated between `0` and `auto`...not with a smooth transition at least.
+
+There is a workaround, however, using CSS Grid and its `grid-template-row` property. Here's a simple demo:
+
+<AnimateHeightWithGrid />
+
+## The Code
+
+The basic code example would be as follows:
+
+```html {1}
+<div class="content">
+  <div class="inside">
+    <p>Very important content.</p>
+    <p>Very important content.</p>
+    <p>Very important content.</p>
+  </div>
+</div>
+```
+
+```css {12}
+.content {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.inside {
+  min-height: 0;
+}
+
+.content.expanded {
+  grid-template-rows: 1fr;
+}
+```
+
+Adding and removing the class `expanded` to the parent `<div>` element with the class `content` would be done using JavaScript.
+
+## Using Tailwind
+
+Here's how I created the example using Tailwind and React:
+
+```jsx
+import React from 'react';
+
+import clsx from 'clsx';
+
+export default function AnimateHeightWithGrid() {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  return (
+    <section className="flex flex-col items-start gap-6">
+      <button
+        className="rounded-md border border-current px-6 py-1 font-semibold"
+        type="button"
+        onClick={() => setIsExpanded((ps) => !ps)}
+      >
+        {isExpanded ? 'Hide' : 'Show'} Content
+      </button>
+      <div
+        className={clsx(
+          'grid overflow-hidden transition-all duration-300',
+          !isExpanded && 'grid-rows-[0fr]',
+          isExpanded && 'grid-rows-[1fr]'
+        )}
+      >
+        <div className="min-h-0">
+          <p>Very important content.</p>
+          <p>Very important content.</p>
+          <p>Very important content.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+```
+
+---
+
+<LastUpdated updated={updated} />

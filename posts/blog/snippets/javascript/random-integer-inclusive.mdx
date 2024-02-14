@@ -1,0 +1,20 @@
+---
+title: Random Integer - Inclusive
+description: A code snippet on how to generate a random integer that's inclusive of both its minimum and maximum input values.
+created: 2022-12-08
+updated: 2022-12-08
+category: snippets
+topics:
+  - JavaScript
+---
+
+Result is inclusive of both the `min` and `max` arguments.
+
+```js
+const randomIntegerInclusive = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+```
+
+---
+
+<LastUpdated updated={updated} />

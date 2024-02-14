@@ -1,0 +1,45 @@
+---
+title: Resolving Ambiguities in Arbitrary Values
+description: Many utilities in Tailwind share a common namespace but map to different CSS properties. When using arbitrary values, Tailwind can generally handle this ambiguity but sometimes needs a hint.
+created: 2023-01-22
+updated: 2023-01-22
+category: notes
+topics:
+  - Tailwind
+---
+
+Many utilities in Tailwind share a common namespace but map to different CSS properties. For example `text-lg` and `text-black` both share the `text-` namespace, but one is for `font-size` and the other is for `color`.
+
+When using **arbitrary values**, Tailwind can generally handle this ambiguity automatically based on the value you pass in:
+
+```html
+<!-- Will generate a font-size utility -->
+<div class="text-[22px]">...</div>
+
+<!-- Will generate a color utility -->
+<div class="text-[#bada55]">...</div>
+```
+
+Sometimes it really is ambiguous though, for example when using _CSS variables_:
+
+```html
+<div class="text-[var(--my-var)]">...</div>
+```
+
+In these situations, you can _“hint”_ the underlying type to Tailwind by adding a [CSS data type](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Types) before the value:
+
+```html /length:/ /color:/
+<!-- Will generate a font-size utility -->
+<div class="text-[length:var(--my-var)]">...</div>
+
+<!-- Will generate a color utility -->
+<div class="text-[color:var(--my-var)]">...</div>
+```
+
+<br />
+
+<TailwindDocs />
+
+---
+
+<LastUpdated updated={updated} />

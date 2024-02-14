@@ -5,6 +5,7 @@ import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
 
 import { SkipAnchor } from '@/components/SkipToContent/SkipToContent';
 import { components } from '@/components/mdxCustomComponents';
+import PageWrapper from '@/components/PageWrapper/PageWrapper';
 
 import { metaConfig } from '@/lib/config/metadata';
 
@@ -33,12 +34,12 @@ export default async function AboutPage() {
   });
 
   return (
-    <div className="gradient-page-body flex-grow">
-      <div className="page-padding mx-auto flex h-full max-w-pageWidth justify-center py-[10vh] sm:py-[16vh]">
-        <SkipAnchor />
-        <h1 className="sr-only">About Me</h1>
+    <PageWrapper className="max-w-pageWidth">
+      <SkipAnchor />
+      <h1 className="sr-only">About Me</h1>
+      <div className="flex justify-center">
         <article className="my-prose">{content}</article>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

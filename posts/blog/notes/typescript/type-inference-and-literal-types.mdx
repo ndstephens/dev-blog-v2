@@ -1,0 +1,65 @@
+---
+title: Type Inference and Literal Types
+description: The basics of TypeScript's handling of type inference and literal types. Using "let" infers a general type, while "const" infers a specific, immutable literal type. Objects properties are non-literal by default, but can be made literal with "as const".
+created: 2022-08-21
+updated: 2022-08-21
+category: notes
+topics:
+  - TypeScript
+---
+
+In TypeScript, variables are "born" with their types.
+
+```ts {4,9}
+// when using "let", TS will infer a more general type
+// allows for value reassignment
+let age = 6;
+// let age: number
+
+// when using "const", TS will infer a more specific type
+// can NOT be reassigned and "number" is an immutable value type
+const age = 6;
+// const age: 6  <- literal type
+```
+
+The type `6` is called a **literal type**. It's not just any `number` type, it's a `number` that's also a `6`.
+
+<blockquote className="attention">
+  Inference is not so specific as to get in the way of common behavior.
+</blockquote>
+
+For example, the `let` variable declaration above could have assumed `age` to be of type `6`, but this would have interfered with our ability to set this re-assignable variable to `7` or `8`.
+
+## Objects
+
+This is why object properties will be non-literal types when inferred...b/c object properties are mutable.
+
+If you want them to be **literal types**, then finish with `as const`:
+
+```ts {13}
+const obj = {
+  name: 'Joe',
+  age: 30,
+};
+// const obj: {
+//   name: string;
+//   age: number;
+// }
+
+const obj = {
+  name: 'Joe',
+  age: 30,
+} as const;
+// const obj: {
+//   readonly name: "Joe";
+//   readonly age: 30;
+// }
+```
+
+<br />
+
+<TSFundamentalsCourse />
+
+---
+
+<LastUpdated updated={updated} />

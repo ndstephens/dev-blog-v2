@@ -1,0 +1,157 @@
+---
+title: Reusable Components with Tailwind - Examples
+description: I'm a recent convert to Tailwind CSS after using styled-components for years. Tailwind has a different approach to reusing styles, but acknowledges that creating reusable components makes sense for certain use cases. Here I will demonstrate 3 examples of a reusable component, created with React and TypeScript, and styled with Tailwind utility classes using props, clsx, and cva, respectively.
+created: 2023-02-12
+updated: 2023-02-12
+category: articles
+topics:
+  - Tailwind
+  - React
+---
+
+I'm a recent convert over to [Tailwind CSS](https://tailwindcss.com/). This site is the first large project I have used it on. Tailwind has definitely required a mental-model shift coming from [styled-components](https://styled-components.com/), which I used and loved for years. But styled-components has issues with it comes to SSR pages so I decided to explore other options.
+
+Programmers are always trying to keep their code DRY. This often includes making certain components reusable, and that was certainly the case with styled-components. Tailwind, however, has a different approach that they [explain very well in their docs](https://tailwindcss.com/docs/reusing-styles).
+
+As they acknowledge, there are times when creating reusable components makes sense. This is primarily true for components that are part of your design system and are used throughout your app. Copying, pasting, and keeping track of styles across multiple files could be very difficult and lead to an inconsistent UI...and potentially even bugs.
+
+Here I'm going to show 3 simple examples of creating a reusable component using Tailwind utility classes (and React and TypeScript). In each example there will be base classes that are always applied to the component (`font-bold` and `text-white`), optional classes (in this case they will relate to `color` and `size`), default options (a default `color` and `size` if none is provided when instantiating the component), and the ability to add additional arbitrary classes with the `className` prop when declaring an instance of the component.
+
+## Using Props
+
+This is pretty standard usage of **props** in React. When declaring an instance of `Button` your IDE's intellisense should guide you in choosing an appropriate value for `color` and/or `size`. If one or neither is provided then the default value will be used.
+
+```tsx title="props.tsx"
+const colors = {
+  indigo: 'bg-indigo-500 hover:bg-indigo-600',
+  cyan: 'bg-cyan-600 hover:bg-cyan-700',
+} as const;
+
+const sizes = {
+  md: 'rounded-md px-4 py-2 text-base',
+  lg: 'rounded-lg px-5 py-3 text-lg',
+} as const;
+
+type Colors = keyof typeof colors;
+type Sizes = keyof typeof sizes;
+
+interface ButtonProps {
+  color?: Colors;
+  size?: Sizes;
+  className?: string;
+  children: React.ReactNode;
+}
+
+export default function Button({
+  color = 'indigo',
+  size = 'lg',
+  className,
+  children,
+}: ButtonProps) {
+  const colorClasses = colors[color];
+  const sizeClasses = sizes[size];
+
+  return (
+    <button
+      type="button"
+      className={`font-bold text-white ${sizeClasses} ${colorClasses} ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## Using `clsx`
+
+[clsx](https://github.com/lukeed/clsx) is "A tiny (228B) utility for constructing `className` strings conditionally". It's similar to the very popular library [classnames](https://github.com/JedWatson/classnames).
+
+The IDE intellisense and end result are the same. It's simply a different way of creating your component. It does often result in less lines of code and arguably may be more "readable" code.
+
+```tsx title="clsx.tsx"
+import clsx from 'clsx';
+
+interface ButtonProps {
+  color?: 'indigo' | 'cyan';
+  size?: 'md' | 'lg';
+  className?: string;
+  children: React.ReactNode;
+}
+
+export default function Button({
+  color = 'indigo',
+  size = 'lg',
+  className,
+  children,
+}: ButtonProps) {
+  return (
+    <button
+      type="button"
+      className={clsx(
+        `font-bold text-white ${className}`,
+        color === 'indigo' && 'bg-indigo-500 hover:bg-indigo-600',
+        color === 'cyan' && 'bg-cyan-600 hover:bg-cyan-700',
+        size === 'md' && 'rounded-md px-4 py-2 text-base',
+        size === 'lg' && 'rounded-lg px-5 py-3 text-lg'
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## Using `cva`
+
+The last example is using [cva](https://github.com/joe-bell/cva), or Class Variance Authority. In their own words: "Creating variants with the 'traditional' CSS approach can become an arduous task; manually matching classes to props and manually adding types. `cva` aims to take those pain points away, allowing you to focus on the more fun aspects of UI development."
+
+This library is great, especially if you component is quite complex (meaning more options). In addition to what's shown in my example there's also the option for [compound variants](https://github.com/joe-bell/cva#compound-variants) and [composing components](https://github.com/joe-bell/cva#composing-components).
+
+It does take a minute to wrap your head around, but remember that this example produces an identical component with identical options as the previous two, so use them for reference if that helps.
+
+```tsx title="cva.tsx"
+import { cva, VariantProps } from 'class-variance-authority';
+
+const button = cva('font-bold text-white', {
+  variants: {
+    color: {
+      indigo: 'bg-indigo-500 hover:bg-indigo-600',
+      cyan: 'bg-cyan-600 hover:bg-cyan-700',
+    },
+    size: {
+      md: 'rounded-md px-4 py-2 text-base',
+      lg: 'rounded-lg px-5 py-3 text-lg',
+    },
+  },
+  defaultVariants: {
+    color: 'indigo',
+    size: 'lg',
+  },
+});
+
+interface ButtonProps extends VariantProps<typeof button> {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export default function Button({
+  color,
+  size,
+  className,
+  children,
+}: ButtonProps) {
+  return (
+    <button type="button" className={button({ color, size, className })}>
+      {children}
+    </button>
+  );
+}
+```
+
+I recommend you and your team try out all 3 and use what you prefer. I shamelessly use all 3 approaches in the same codebase.
+
+Thanks for reading.
+
+---
+
+<LastUpdated updated={updated} />

@@ -35,6 +35,7 @@ const config: Config = {
       },
       spacing: {
         pageWidth: '68rem', // 1088px
+        narrowPageWidth: '58rem', // 928px
         headerHeightDesktop: '4rem', // 64px
         headerHeightMobile: '3.25rem', // 48px
       },

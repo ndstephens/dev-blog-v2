@@ -1,0 +1,110 @@
+---
+title: PostgreSQL DB Connection and Security
+description: A guide to connecting to a PostgreSQL database using the pg package in Node.js, explaining the differences between a client and a pool of clients. Also emphasizes the importance of parameterizing queries and sanitizing user inputs to prevent SQL injection attacks.
+created: 2023-03-15
+updated: 2023-03-16
+category: notes
+topics:
+  - Database
+---
+
+## Connect to database
+
+The package [pg](https://node-postgres.com/) is the most common PostgreSQL client for Node.js.
+
+It provides the most direct access to the underlying queries.
+
+### Client vs Pool
+
+You can think of a **client** as an individual connection you open and then eventually close to your PostgreSQL database.
+
+A **pool** is a group of clients.
+
+Opening and closing clients can be expensive if you're doing it a lot. All that opening and closing of connections is a lot of overhead. A pool therefore holds onto connections.
+
+### Create a pool
+
+```js
+const pg = require('pg');
+const pool = new pg.Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'recipeguru',
+  password: 'lol',
+  port: 5432,
+});
+```
+
+Obviously be sure to update all the credentials to those matching your database.
+
+An example query:
+
+```js
+const { rows } = await pool.query(`SELECT * FROM recipes`);
+```
+
+## Parameterization and SQL injection
+
+Let's say you wanted to query for one specific ingredient by id and that id was passed in via an AJAX request.
+
+```sql
+SELECT * FROM ingredients WHERE id = <user input here>;
+```
+
+The following would be insecure and allow for a SQL injection:
+
+```js
+const { id } = req.query;
+const { rows } = await pool.query(`SELECT * FROM ingredients WHERE id=${id}`);
+```
+
+You're just passing in user data to a query and a user could put anything in that `id` API request.
+
+What happens if a user made `id` equal to `1; DROP TABLE users; --`?
+
+```sql
+SELECT * FROM ingredients WHERE id=1; DROP TABLE users; --
+```
+
+The `1;` ends the first query. The `DROP TABLE users;` would delete a `users` table (if one existed). The `--` says "everything after this is a comment" so it comments out the rest of your SQL if anything came after it.
+
+### Sanitization
+
+Sanitization of your inputs and parameterization of your queries would go as follows;
+
+```js
+const { id } = req.query;
+
+const { rows } = await pool.query('SELECT * FROM ingredients WHERE id=$1', [
+  id,
+]);
+```
+
+`pg` will handle making sure that what goes into the query is safe to send to your database.
+
+If you need to write a query similar to:
+
+```js
+const { rows } = await pool.query(
+  `SELECT * FROM ingredients WHERE text ILIKE '%${input}%'`
+);
+```
+
+Instead use parameterized queries as follows:
+
+```js
+const { rows } = await pool.query(
+  'SELECT * FROM ingredients WHERE text ILIKE $1',
+  [`%${input}%`]
+);
+```
+
+It's also worth noting that while parameterized queries are a good way to prevent SQL injection attacks, it's also important to validate and sanitize user input before it is used in the query. This can help prevent other types of attacks like cross-site scripting (XSS).
+
+<br />
+
+<IntroToPostgreSQLCOURSE />
+
+---
+
+<LastUpdated updated={updated} />

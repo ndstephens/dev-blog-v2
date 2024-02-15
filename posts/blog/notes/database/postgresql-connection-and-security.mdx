@@ -5,7 +5,7 @@ created: 2023-03-15
 updated: 2023-03-16
 category: notes
 topics:
-  - Database
+  - Databases
 ---
 
 ## Connect to database
@@ -86,7 +86,7 @@ If you need to write a query similar to:
 
 ```js
 const { rows } = await pool.query(
-  `SELECT * FROM ingredients WHERE text ILIKE '%${input}%'`
+  `SELECT * FROM ingredients WHERE text ILIKE '%${input}%'`,
 );
 ```
 
@@ -95,7 +95,7 @@ Instead use parameterized queries as follows:
 ```js
 const { rows } = await pool.query(
   'SELECT * FROM ingredients WHERE text ILIKE $1',
-  [`%${input}%`]
+  [`%${input}%`],
 );
 ```
 

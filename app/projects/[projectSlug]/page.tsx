@@ -7,16 +7,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper';
 import { getAllSlugs, getProjectFromSlug } from '@/lib/api/posts';
 import { metaConfig } from '@/lib/config/metadata';
 
-//* Get all project slugs
-export async function generateStaticParams() {
-  const allProjectSlugs = await getAllSlugs('project');
-
-  return allProjectSlugs.map((projectSlug) => ({
-    projectSlug,
-  }));
-}
-
-//* Generate metadata for each project
+//* META DATA
 export async function generateMetadata({
   params,
 }: {
@@ -41,8 +32,16 @@ export async function generateMetadata({
   return metadata;
 }
 
-//* Generate static pages for each project
-export default async function Page({
+//* PARAMS
+export async function generateStaticParams() {
+  const allProjectSlugs = await getAllSlugs('project');
+  return allProjectSlugs.map((projectSlug) => ({
+    projectSlug,
+  }));
+}
+
+//* PAGE
+export default async function ProjectPage({
   params,
 }: {
   params: { projectSlug: string };

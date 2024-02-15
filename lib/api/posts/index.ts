@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import fg from 'fast-glob';
-// import matter from 'gray-matter';
+import matter from 'gray-matter';
 import { z } from 'zod';
 import { compileMDX } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
@@ -12,17 +12,14 @@ import { notFound } from 'next/navigation';
 
 import { components } from '@/components/mdxCustomComponents';
 
-import lightOwl from '@/lib/code-themes/lightOwl.json';
 import nightOwl from '@/lib/code-themes/nightOwl.json';
 
 import {
-  Post,
   PostCategory,
   PostCategorySchema,
   PostMeta,
   PostTopic,
   PostTopicSchema,
-  Project,
 } from './types';
 
 type PostType = 'blog' | 'project' | 'all';
@@ -76,7 +73,6 @@ const getPostPreviewsFromPathList = async (pathList: string[]) => {
 const getPostPreviewFromPath = async (postPath: string) => {
   const slug = getSlugFromPath(postPath);
   const source = await fs.readFile(postPath, 'utf-8');
-  // const postData = matter(source);
   const { frontmatter } = await compileMDX({
     source,
     options: {
@@ -85,7 +81,6 @@ const getPostPreviewFromPath = async (postPath: string) => {
   });
 
   try {
-    // return parsePost(postData, slug).meta;
     return parsePostFrontmatter(frontmatter, slug);
   } catch (err) {
     throw err;
@@ -170,7 +165,6 @@ export const getPostFromSlug = async (slug: string) => {
   const allBlogPaths = await getAllPostPaths('blog');
   const blogPath = allBlogPaths.find((path) => path.endsWith(`${slug}.mdx`));
   if (!blogPath) {
-    // throw new Error('No post found for this slug');
     return notFound();
   }
   const blog = await getPostFromPath(blogPath);
@@ -181,34 +175,35 @@ export const getPostFromSlug = async (slug: string) => {
 const getPostFromPath = async (blogPath: string) => {
   const slug = getSlugFromPath(blogPath);
   const source = await fs.readFile(blogPath, 'utf-8');
-  // const blogData = matter(source);
+  const { content: contentString, data } = matter(source);
   const { content, frontmatter } = await compileMDX({
     source,
     components,
     options: {
       parseFrontmatter: true,
+      scope: parsePostFrontmatter(data, slug),
       mdxOptions: {
         remarkPlugins: [remarkGfm],
         rehypePlugins: [
           rehypeSlug,
           [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-          // TODO: need to fix this
-          // [
-          //   rehypePrettyCode,
-          //   {
-          //     theme: {
-          //       dark: nightOwl,
-          //       light: lightOwl,
-          //     },
-          //     // keepBackground: true,
-          //     onVisitHighlightedLine(node: any) {
-          //       node.properties.className.push('line--highlighted');
-          //     },
-          //     onVisitHighlightedWord(node: any) {
-          //       node.properties.className = ['word'];
-          //     },
-          //   },
-          // ],
+          [
+            rehypePrettyCode,
+            {
+              theme: nightOwl,
+              // theme: {
+              //   dark: nightOwl,
+              //   light: lightOwl,
+              // },
+              // keepBackground: true,
+              onVisitHighlightedLine(node: any) {
+                node.properties.className.push('line--highlighted');
+              },
+              onVisitHighlightedWord(node: any) {
+                node.properties.className = ['word'];
+              },
+            },
+          ],
           rehypeAccessibleEmojis,
         ],
       },
@@ -216,8 +211,8 @@ const getPostFromPath = async (blogPath: string) => {
   });
 
   try {
-    // return parsePost(blogData, slug);
     return {
+      contentString,
       content,
       meta: parsePostFrontmatter(frontmatter, slug),
     };
@@ -311,30 +306,6 @@ export const getAllSlugs = async (postType: PostType) => {
 //* =============================================
 //*               POST FRONTMATTER              =
 //*==============================================
-// VERIFY STRUCTURE AND DATA-TYPES OF POST (gray-matter response)
-// const RawPostSchema = z.object({
-//   content: z.string().trim().min(1),
-//   data: z.object({
-//     title: z.string().trim().min(1),
-//     description: z.string().trim().min(1),
-//     created: z.date().transform((date) => date.toISOString()),
-//     updated: z.date().transform((date) => date.toISOString()),
-//     category: PostCategorySchema,
-//     topics: z.array(PostTopicSchema).min(1),
-//   }),
-// });
-
-// const parsePost = (postData: unknown, slug: string): Post => {
-//   const { content, data } = RawPostSchema.parse(postData);
-//   return {
-//     content,
-//     meta: {
-//       slug,
-//       ...data,
-//     },
-//   };
-// };
-
 const RawPostFrontmatter = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().min(1),

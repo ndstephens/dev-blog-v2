@@ -10,14 +10,7 @@ import { type BlogRoute, blogRoutes } from '@/lib/config/routes';
 import { metaConfig } from '@/lib/config/metadata';
 import { getAllPostTopicsInUse, getPostPreviews } from '@/lib/api/posts';
 
-//* Get all category slugs
-export async function generateStaticParams() {
-  return blogRoutes.map((route) => ({
-    category: route.category,
-  }));
-}
-
-//* Generate metadata for each category
+//* META DATA
 export async function generateMetadata({
   params,
 }: {
@@ -33,13 +26,20 @@ export async function generateMetadata({
       ...metaConfig.openGraph,
       title: `${route.title} | Nate Stephens`,
       description: route.descLong,
-      url: `/${route.href}`,
+      url: route.href,
     },
   };
   return metadata;
 }
 
-//* Generate static pages for each category
+//* PARAMS
+export async function generateStaticParams() {
+  return blogRoutes.map((route) => ({
+    category: route.category,
+  }));
+}
+
+//* PAGE
 export default async function BlogCategoryPage({
   params,
 }: {

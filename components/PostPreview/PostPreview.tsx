@@ -19,7 +19,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
         </Link>
       </h2>
       {category !== 'snippets' && (
-        <p className="line-clamp-4 text-base font-normal leading-relaxed">
+        <p className="line-clamp-4 text-pretty text-base font-normal leading-relaxed">
           {description}
         </p>
       )}

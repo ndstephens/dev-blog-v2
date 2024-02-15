@@ -36,10 +36,10 @@
   }
 
   .pageTitle {
-    @apply text-4xl font-semibold !leading-[1.1] xs:text-5xl;
+    @apply text-balance text-4xl font-semibold !leading-[1.1] xs:text-5xl;
   }
   .pageSubTitle {
-    @apply text-lg font-normal tracking-wide text-primary-300 xs:text-xl;
+    @apply text-pretty text-lg font-normal tracking-wide text-primary-300 xs:text-xl;
   }
   .sectionHeader {
     @apply mb-4 text-base font-medium uppercase tracking-wider text-primary-300;

@@ -11,6 +11,7 @@ import { getAllPostTopicsInUse, getPostPreviews } from '@/lib/api/posts';
 import { type BlogRoute, blogRoutes } from '@/lib/config/routes';
 import { metaConfig } from '@/lib/config/metadata';
 import { PostTopic, PostTopicSchema } from '@/lib/api/posts/types';
+import { slugify } from '@/lib/utils/strings';
 
 //* META DATA
 export async function generateMetadata({
@@ -52,7 +53,7 @@ export async function generateStaticParams() {
       const categoryTopics = await getAllPostTopicsInUse(category);
       return categoryTopics.map((topic) => ({
         category,
-        topic,
+        topic: slugify(topic),
       }));
     }),
   ).then((combinations) => combinations.flat());

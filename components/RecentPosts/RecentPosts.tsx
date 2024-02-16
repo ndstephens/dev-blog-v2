@@ -16,9 +16,9 @@ export default function RecentPosts({ posts, className }: RecentPostsProps) {
           <li key={post.slug}>
             <Link
               href={post.slug}
-              className="group -mx-2 flex items-center justify-between rounded-2xl px-2 py-4 tracking-wider duration-300 hocusv:bg-surface-800 xs:-mx-4 xs:p-4"
+              className="group -mx-2 flex items-center justify-between rounded-2xl px-2 py-4 tracking-wider transition-colors hocusv:bg-surface-800 xs:-mx-4 xs:p-4"
             >
-              <h3 className="mr-8 truncate text-sm font-medium transition-colors duration-300 group-hocusv:text-primary-300 xs:text-base sm:text-lg">
+              <h3 className="mr-8 truncate text-sm font-medium transition-colors group-hocusv:text-primary-300 xs:text-base sm:text-lg">
                 {post.title}
               </h3>
               <p className="whitespace-nowrap text-sm">

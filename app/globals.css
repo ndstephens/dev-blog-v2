@@ -99,7 +99,6 @@
     h2,
     h3,
     h4 {
-      /* TODO: is the scroll mt working and the right size */
       @apply scroll-mt-20 text-balance font-bold tracking-wide text-textClr-50;
       strong {
         @apply font-extrabold;
@@ -110,8 +109,7 @@
       }
     }
     blockquote {
-      /* TODO: why is there a py of 1px ?? */
-      @apply relative my-[2.5em] rounded-xl border-2 border-l-[6px] bg-surface-700 px-[1em] py-px text-[0.95em] font-medium italic text-textClr-200 sm:-mx-4;
+      @apply relative my-[2.5em] rounded-xl border-2 border-l-[6px] bg-surface-700 px-[1em] text-[0.95em] font-medium italic text-textClr-200 sm:-mx-4;
       &.info {
         @apply border-primary-300 before:content-["😉"];
       }
@@ -124,7 +122,6 @@
           @apply text-warning-500;
         }
       }
-      /* TODO: is this working ?? */
       &:is(.info, .attention, .warning)::before {
         @apply absolute -left-3.5 -top-3.5 inline-block rounded-full bg-surface-900 p-1.5 text-[28px] not-italic leading-none;
       }
@@ -144,14 +141,12 @@
     time {
       @apply rounded-[0.25em] bg-white/10 px-[0.4em] py-[0.12em] text-[0.95em] tracking-wide text-primary-200;
     }
-    /* TODO: could this be within `pre` ?? */
     div[data-rehype-pretty-code-fragment] {
       @apply relative mb-[2em] mt-[2.5em];
       div[data-rehype-pretty-code-title] {
         @apply absolute -top-[28px] left-[20px] flex h-[28px] items-center rounded-t-lg border-b border-b-primary-300 bg-surface-800 px-4 pt-[4px] text-[12px] tracking-widest text-textClr-200;
       }
     }
-    /* TODO: -mx seems strange here, make sure content is working */
     pre {
       @apply relative -mx-4 min-w-full whitespace-pre rounded-lg bg-surface-800 before:content-[attr(data-language)] xs:-mx-6 sm:-mx-4 sm:rounded-lg;
     }
@@ -167,7 +162,7 @@
       }
       .line {
         @apply border-l-4 border-l-transparent px-[1.8em] before:inline-block before:content-[''];
-        &.line-highlighted {
+        &.line--highlighted {
           @apply border-l-primary-300 bg-white/10;
         }
       }

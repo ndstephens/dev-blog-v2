@@ -24,7 +24,7 @@ export async function generateMetadata({
   if (!route) return notFound();
 
   const formattedTopic = PostTopicSchema.options.find(
-    (postTopic) => postTopic.toLowerCase() === topic,
+    (postTopic) => slugify(postTopic) === topic,
   );
   if (!formattedTopic) return notFound();
 
@@ -72,7 +72,7 @@ export default async function BlogCategoryTopicPage({
   if (!route) return notFound();
 
   const formattedTopic = PostTopicSchema.options.find(
-    (postTopic) => postTopic.toLowerCase() === topic,
+    (postTopic) => slugify(postTopic) === topic,
   );
   if (!formattedTopic) return notFound();
 

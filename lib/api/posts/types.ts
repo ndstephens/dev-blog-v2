@@ -7,6 +7,7 @@ export const PostCategorySchema = z.enum(['articles', 'notes', 'snippets']);
 
 export const PostTopicSchema = z.enum([
   'Accessibility',
+  'AI',
   'Animation',
   'CSS',
   'Databases',

@@ -25,6 +25,7 @@ export default function RecentPosts({ posts, className }: RecentPostsProps) {
                 {new Intl.DateTimeFormat('en-US', {
                   month: 'short',
                   day: 'numeric',
+                  year: '2-digit',
                   timeZone: 'UTC',
                 }).format(new Date(post.created))}
               </p>

@@ -149,13 +149,15 @@
     }
     pre {
       @apply relative -mx-4 min-w-full whitespace-pre rounded-lg bg-surface-800 before:content-[attr(data-language)] xs:-mx-6 sm:-mx-4 sm:rounded-lg;
+      &[data-language='txt'] {
+        @apply whitespace-pre-wrap;
+      }
     }
     pre::before {
       @apply absolute -top-[28px] right-[36px] flex h-[28px] items-center rounded-t-lg bg-surface-800 px-[16px] pt-[4px] text-[12px] uppercase tracking-widest text-textClr-200;
     }
     pre > code {
-      /* TODO: is this working ?? */
-      counter-reset: 'line';
+      counter-reset: line;
       @apply grid overflow-x-auto bg-transparent px-0 py-[1.6em] text-[0.875em] font-medium leading-[1.8] tracking-wide;
       .word {
         @apply rounded-[0.25em] bg-white/10 px-[0.25em] py-[0.18em];
@@ -166,10 +168,9 @@
           @apply border-l-primary-300 bg-white/10;
         }
       }
-      /* TODO: is this working ?? */
       &[data-line-numbers] > .line::before {
-        counter-increment: 'line';
-        content: counter('line');
+        counter-increment: line;
+        content: counter(line);
         @apply mr-6 w-4 text-right text-textClr-400;
       }
       &[data-line-numbers-max-digits='2'] > .line::before {

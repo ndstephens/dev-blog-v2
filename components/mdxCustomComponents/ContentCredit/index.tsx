@@ -143,6 +143,19 @@ export function IntroToPostgreSQLCOURSE() {
   );
 }
 
+export function PromptEngineeringCourse() {
+  return (
+    <CourseCredit
+      courseName="Prompt Engineering for Web Developers"
+      courseUrl="https://www.freecodecamp.org/news/prompt-engineering-for-web-developers/"
+      siteName="FreeCodeCamp"
+      siteUrl="https://www.freecodecamp.org"
+      instructorName="Treasure Porth"
+      instructorUrl="https://github.com/trezp"
+    />
+  );
+}
+
 //* =============================================
 //*                     DOCS                    =
 //*==============================================

@@ -1,0 +1,319 @@
+---
+title: AI Assisted Coding
+description: Some examples covering versatile applications of AI in coding, ranging from project ideation to deployment assistance. It introduces concepts like generating code using pseudocode, creating edge cases, debugging, code conversion, documentation, and studying web development. The examples provided showcase the broad spectrum of tasks AI can assist with, making it a comprehensive guide for leveraging AI in various coding scenarios.
+created: 2024-03-03
+updated: 2024-03-03
+category: notes
+topics:
+  - AI
+---
+
+## Possible Use Cases
+
+- Generate project ideas
+- Plan projects, write user stories and JIRA tickets
+- Generate code and code snippets
+- Generate mock data
+- Debug
+- Get refactor suggestions
+- Convert code from one format (or language) to another
+- Write tests and documentation
+- Learn new technologies and advanced topics faster
+
+---
+
+## Generate Code with Pseudocode
+
+Using a code-like structure:
+
+```txt
+Please write a JavaScript function:
+
+function getBookById(bookArr, id)
+  for each book in bookArr
+    if book.id === id
+      return book
+    else return error object "No book found"
+```
+
+Or a more conversational approach:
+
+```txt
+Write a JavaScript function findBookById which takes two arguments, bookArr and id:
+
+- for each book in bookArr, compare each bookArr id with passed in id
+  - if found, return book
+  - if not found, return error object, "Sorry, no book found"
+```
+
+---
+
+## Generate Code Using a Pseudo Language
+
+### Example:
+
+_Prompt:_
+
+```txt
+I want to build my own React component library with common components like form fields, nav bars and accordion menus.
+
+- Create a pseudo code language similar to Markdown that will help me quickly describe a React component so you can convert it to example code.
+- Respond with a template I can use, as well an example component. Keep the template and the component as simple as possible.
+```
+
+_Response:_
+
+```txt
+# ComponentName
+
+State:
+- stateVariable: initialValue
+
+Props:
+- propName: propType
+
+Render:
+- Description of render content
+
+Event Handlers:
+- handlerName: Description of handler functionality
+```
+
+You could reply with:
+
+```txt
+# Counter
+
+State:
+- count: 0
+
+Props:
+- incrementValue: number
+
+Render:
+- A button that displays the current count. Each click increases the count by `incrementValue`.
+
+Event Handlers:
+- handleIncrement: Increases the count state by `incrementValue`.
+```
+
+---
+
+## Generate Edge Cases
+
+Ask for edge cases to verify AI-created code works properly.
+
+```txt
+List 8 edge cases this function should account for, and provide test cases for each.
+```
+
+```txt
+Give me the edge case tests in a single code block,
+and denote the edge case as part of the console.log.
+Example: console.log('empty array: ', removeDuplicates([]))
+```
+
+You can also ask for tests using a specific test runner such as Jest.
+
+```txt
+Please write 8 test for this JS function using Jest:
+
+function isEven(n){
+  return n % 2 === 0;
+}
+```
+
+You can then ask the AI to refactor your function based on the test results. Maybe you need to make the function more resilient against certain inputs.
+
+```txt
+Revise the function based on the edge cases.  Instead please...(then offer suggestions as to how edge cases should be handled, such as throwing Errors, and how to check each input to be sure it satisfies certain criteria)
+```
+
+---
+
+## Debugging and Error Messages
+
+Prompt GPT to help you fix errors.
+
+- Run the function. Copy and past the error message into ChatGPT along with the function.
+- Ask the AI to explain the errors as code comments.
+
+```txt
+This function should return the HTML for a new blog preview post, but instead I'm getting the following error: "!TypeError: parentElement.appendChild is not a function."  Please fix the errors and explain the fixes with code comments.  Comment out the old code rather than replacing so I can better see how you fixed it.
+
+(then paste in the original function here)
+```
+
+---
+
+## Convert Code
+
+- Language to language
+  - JavaScript \<-> Python
+- CSS to other styling formats
+  - CSS \<-> Tailwind
+  - CSS \<-> Styled-Component
+- File format to file format
+  - JSON \<-> CSV
+- Framework to framework
+  - React \<-> Vue
+
+```txt
+Please convert this CSV file of 90's sitcoms to JSON.  Make sure to do the following:
+
+- Lowercase and concat headers to one snake-cased word.
+- Convert header "Main Actors" to an array.
+- "year" and "average_rating" columns are numbers
+
+(then provide the CSV file)
+```
+
+---
+
+## Document Code
+
+Copy and paste sections of code and ask the AI to document it in a specific format.
+
+```txt
+Please document this function using JSDoc:
+
+(the function code)
+```
+
+```txt
+How can I document this React component using Storybook:
+
+(the React component)
+```
+
+Have ChatGPT help you create a style-guide that you can then add to your README markdown.
+
+```txt
+I want to create a siple JavaScript style guide.  Ask me 10 questions about best practices and style conventions and use my answers to write a style guide.
+```
+
+---
+
+## Study Web Development via Prompt Engineering
+
+### Summarize and explain info in a variety of ways
+
+- Broad -> Detailed
+- Instruct ChatGPT to:
+  - Assume a specific audience
+  - Assume a specific experience or skill level
+  - Metaphor or specific example
+
+```txt
+Please tell me about (...).  Explain the concepts as if I am a beginner and include a code example.
+```
+
+```txt
+I still don't quite understand.  Can you explain using a metaphor, and can you provide a couple more use cases?
+```
+
+```txt
+Please explain it to me as if I am 5 years old.
+```
+
+```txt
+You are a senior engineer and I am a junior engineer.  Please explain it to me in detail.
+```
+
+### Find learning resources
+
+```txt
+List 5 great articles I can read to understand dynamic programming.
+```
+
+### Create a study guide and/or schedule
+
+```txt
+Write me a study guide on TypeScript, including outside resources for further study.  Assume I already have a strong grasp of JavaScript.
+```
+
+```txt
+Based on this study guide, please create a study schedule for me.  Assume I want to spend about 10 hours a week studying this topic.  For each study session, include the topics I should study, along with additional resources and practice exercises.
+```
+
+### Test yourself
+
+```txt
+I've been studying TypeScript Generics.  Quiz me on my knowledge.
+```
+
+```txt
+Give me 5 small coding problems to practice and test my knowledge of higher order functions in JavaScript.
+```
+
+---
+
+## Explore APIs and Generate API calls
+
+```txt
+Please help me explore the Github API.  List 5 available endpoints and what information I can get from those endpoints.
+```
+
+```txt
+Please write an example API call showing how to retrieve issues from the core React repository.  Use fetch.
+```
+
+```txt
+Show me an example of how to request the star count of a repository from the Github API.  Use freecodecamp's main repository as an example.  Use fetch.
+```
+
+```txt
+I would like to build a tool that interacts with the Github API where I can send a search term and get back the name, star count, and the url of the top 5 matching repositories with the most stars.  Can you give me an example API call using JavaScript and the Fetch API?
+```
+
+---
+
+## Help with Git and Github
+
+```txt
+What is the git command to create a new branch?
+```
+
+```txt
+My tech lead has asked me to rebase my branch, but I don't know what that means.  Can you explain?
+```
+
+```txt
+How do I resole merge conflicts using VS Code?
+```
+
+```txt
+I want to open a pull request, but I only want certain commits to be a part of this pull request.  What can I do?
+```
+
+```txt
+Give me a step by step guide to submitting a PR for an open source project.  I've clone the repo locally.  My branch is called fix-broken-link, I wan to PR into the main branch of a project called awesome-proj.
+```
+
+```txt
+Ask me questions about my PR and use my answers to generate a PR description.
+```
+
+---
+
+## Deploying
+
+```txt
+Please compare several services I can use to deploy a front-end project.
+```
+
+```txt
+Please give me a step by step guide on how to deploy my project with Github Pages.
+```
+
+```txt
+List some commands I can use to interact with the Heroku CLI to deploy a project.
+```
+
+<br />
+
+<PromptEngineeringCourse />
+
+---
+
+<LastUpdated updated={updated} />

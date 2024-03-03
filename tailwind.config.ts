@@ -3,8 +3,6 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 import colors from 'tailwindcss/colors';
 import plugin from 'tailwindcss/plugin';
 
-const { transparent, current, white, black } = colors;
-
 const config: Config = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',

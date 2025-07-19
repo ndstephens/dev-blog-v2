@@ -24,7 +24,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       >
         <SkipLink />
         <SiteHeader />
-        <main className="flex flex-grow flex-col">{children}</main>
+        <main className="flex grow flex-col">{children}</main>
         <SiteFooter />
       </body>
     </html>
